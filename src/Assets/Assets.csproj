@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Assets</AssemblyName>
+    <RootNamespace>Assets</RootNamespace>
+    <UserSecretsId>dabdde60-c34a-4207-946f-aba2473c65aa</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
+    <PackageReference Include="Swisschain.Sdk.Server" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Assets.Repositories\Assets.Repositories.csproj" />
+    <ProjectReference Include="..\Assets.Services\Assets.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\..\.protos\assets.proto" Link="Protos\assets.proto" />
+    <Protobuf Include="..\..\.protos\asset-pairs.proto" Link="Protos\asset-pairs.proto" />
+    <Protobuf Include="..\..\.protos\isalive.proto" Link="Protos\isalive.proto" />
+  </ItemGroup>
+
+</Project>

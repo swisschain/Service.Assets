@@ -1,0 +1,293 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Assets.Client</name>
+    </assembly>
+    <members>
+        <member name="T:Service.Assets.Contracts.AssetsReflection">
+            <summary>Holder for reflection information generated from assets.proto</summary>
+        </member>
+        <member name="P:Service.Assets.Contracts.AssetsReflection.Descriptor">
+            <summary>File descriptor for assets.proto</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.GetAllAssetsResponse.AssetsFieldNumber">
+            <summary>Field number for the "assets" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.GetAssetByIdRequest.AssetIdFieldNumber">
+            <summary>Field number for the "assetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.GetAssetByIdResponse.AssetFieldNumber">
+            <summary>Field number for the "asset" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetRequest.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetRequest.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetRequest.DescriptionFieldNumber">
+            <summary>Field number for the "description" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetRequest.AccuracyFieldNumber">
+            <summary>Field number for the "accuracy" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetResponse.AssetFieldNumber">
+            <summary>Field number for the "asset" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetRequest.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetRequest.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetRequest.DescriptionFieldNumber">
+            <summary>Field number for the "description" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetRequest.AccuracyFieldNumber">
+            <summary>Field number for the "accuracy" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.DeleteAssetRequest.AssetIdFieldNumber">
+            <summary>Field number for the "assetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.Asset.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.Asset.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.Asset.DescriptionFieldNumber">
+            <summary>Field number for the "description" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.Asset.AccuracyFieldNumber">
+            <summary>Field number for the "accuracy" field.</summary>
+        </member>
+        <member name="P:Service.Assets.Contracts.Assets.Descriptor">
+            <summary>Service descriptor</summary>
+        </member>
+        <member name="T:Service.Assets.Contracts.Assets.AssetsBase">
+            <summary>Base class for server-side implementations of Assets</summary>
+        </member>
+        <member name="T:Service.Assets.Contracts.Assets.AssetsClient">
+            <summary>Client for Assets</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.AssetsClient.#ctor(Grpc.Core.ChannelBase)">
+            <summary>Creates a new client for Assets</summary>
+            <param name="channel">The channel to use to make remote calls.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.AssetsClient.#ctor(Grpc.Core.CallInvoker)">
+            <summary>Creates a new client for Assets that uses a custom <c>CallInvoker</c>.</summary>
+            <param name="callInvoker">The callInvoker to use to make remote calls.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.AssetsClient.#ctor">
+            <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.AssetsClient.#ctor(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Protected constructor to allow creation of configured clients.</summary>
+            <param name="configuration">The client configuration.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.AssetsClient.NewInstance(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.BindService(Service.Assets.Contracts.Assets.AssetsBase)">
+            <summary>Creates service definition that can be registered with a server</summary>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Assets.BindService(Grpc.Core.ServiceBinderBase,Service.Assets.Contracts.Assets.AssetsBase)">
+            <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
+            Note: this method is part of an experimental API that can change or be removed without any prior notice.</summary>
+            <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="T:Service.Assets.Contracts.AssetPairsReflection">
+            <summary>Holder for reflection information generated from asset-pairs.proto</summary>
+        </member>
+        <member name="P:Service.Assets.Contracts.AssetPairsReflection.Descriptor">
+            <summary>File descriptor for asset-pairs.proto</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.GetAllAssetPairsResponse.AssetPairsFieldNumber">
+            <summary>Field number for the "assetPairs" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.GetAssetPairByIdRequest.AssetPairIdFieldNumber">
+            <summary>Field number for the "assetPairId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.GetAssetPairByIdResponse.AssetPairFieldNumber">
+            <summary>Field number for the "assetPair" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.BaseAssetIdFieldNumber">
+            <summary>Field number for the "baseAssetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.QuotingAssetIdFieldNumber">
+            <summary>Field number for the "quotingAssetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.AccuracyFieldNumber">
+            <summary>Field number for the "accuracy" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.MinVolumeFieldNumber">
+            <summary>Field number for the "minVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.MaxVolumeFieldNumber">
+            <summary>Field number for the "maxVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.MaxOppositeVolumeFieldNumber">
+            <summary>Field number for the "maxOppositeVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairRequest.MarketOrderPriceThresholdFieldNumber">
+            <summary>Field number for the "marketOrderPriceThreshold" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AddAssetPairResponse.AssetPairFieldNumber">
+            <summary>Field number for the "assetPair" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.BaseAssetIdFieldNumber">
+            <summary>Field number for the "baseAssetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.QuotingAssetIdFieldNumber">
+            <summary>Field number for the "quotingAssetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.AccuracyFieldNumber">
+            <summary>Field number for the "accuracy" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.MinVolumeFieldNumber">
+            <summary>Field number for the "minVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.MaxVolumeFieldNumber">
+            <summary>Field number for the "maxVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.MaxOppositeVolumeFieldNumber">
+            <summary>Field number for the "maxOppositeVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.UpdateAssetPairRequest.MarketOrderPriceThresholdFieldNumber">
+            <summary>Field number for the "marketOrderPriceThreshold" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.DeleteAssetPairRequest.AssetPairIdFieldNumber">
+            <summary>Field number for the "assetPairId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.BaseAssetIdFieldNumber">
+            <summary>Field number for the "baseAssetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.QuotingAssetIdFieldNumber">
+            <summary>Field number for the "quotingAssetId" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.AccuracyFieldNumber">
+            <summary>Field number for the "accuracy" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.MinVolumeFieldNumber">
+            <summary>Field number for the "minVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.MaxVolumeFieldNumber">
+            <summary>Field number for the "maxVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.MaxOppositeVolumeFieldNumber">
+            <summary>Field number for the "maxOppositeVolume" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.AssetPair.MarketOrderPriceThresholdFieldNumber">
+            <summary>Field number for the "marketOrderPriceThreshold" field.</summary>
+        </member>
+        <member name="P:Service.Assets.Contracts.AssetPairs.Descriptor">
+            <summary>Service descriptor</summary>
+        </member>
+        <member name="T:Service.Assets.Contracts.AssetPairs.AssetPairsBase">
+            <summary>Base class for server-side implementations of AssetPairs</summary>
+        </member>
+        <member name="T:Service.Assets.Contracts.AssetPairs.AssetPairsClient">
+            <summary>Client for AssetPairs</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.AssetPairsClient.#ctor(Grpc.Core.ChannelBase)">
+            <summary>Creates a new client for AssetPairs</summary>
+            <param name="channel">The channel to use to make remote calls.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.AssetPairsClient.#ctor(Grpc.Core.CallInvoker)">
+            <summary>Creates a new client for AssetPairs that uses a custom <c>CallInvoker</c>.</summary>
+            <param name="callInvoker">The callInvoker to use to make remote calls.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.AssetPairsClient.#ctor">
+            <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.AssetPairsClient.#ctor(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Protected constructor to allow creation of configured clients.</summary>
+            <param name="configuration">The client configuration.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.AssetPairsClient.NewInstance(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.BindService(Service.Assets.Contracts.AssetPairs.AssetPairsBase)">
+            <summary>Creates service definition that can be registered with a server</summary>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.AssetPairs.BindService(Grpc.Core.ServiceBinderBase,Service.Assets.Contracts.AssetPairs.AssetPairsBase)">
+            <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
+            Note: this method is part of an experimental API that can change or be removed without any prior notice.</summary>
+            <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="T:Service.Assets.Contracts.IsaliveReflection">
+            <summary>Holder for reflection information generated from isalive.proto</summary>
+        </member>
+        <member name="P:Service.Assets.Contracts.IsaliveReflection.Descriptor">
+            <summary>File descriptor for isalive.proto</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.IsAliveResponse.NameFieldNumber">
+            <summary>Field number for the "name" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.IsAliveResponse.VersionFieldNumber">
+            <summary>Field number for the "version" field.</summary>
+        </member>
+        <member name="F:Service.Assets.Contracts.IsAliveResponse.StartedAtFieldNumber">
+            <summary>Field number for the "startedAt" field.</summary>
+        </member>
+        <member name="P:Service.Assets.Contracts.Monitoring.Descriptor">
+            <summary>Service descriptor</summary>
+        </member>
+        <member name="T:Service.Assets.Contracts.Monitoring.MonitoringBase">
+            <summary>Base class for server-side implementations of Monitoring</summary>
+        </member>
+        <member name="T:Service.Assets.Contracts.Monitoring.MonitoringClient">
+            <summary>Client for Monitoring</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.MonitoringClient.#ctor(Grpc.Core.ChannelBase)">
+            <summary>Creates a new client for Monitoring</summary>
+            <param name="channel">The channel to use to make remote calls.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.MonitoringClient.#ctor(Grpc.Core.CallInvoker)">
+            <summary>Creates a new client for Monitoring that uses a custom <c>CallInvoker</c>.</summary>
+            <param name="callInvoker">The callInvoker to use to make remote calls.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.MonitoringClient.#ctor">
+            <summary>Protected parameterless constructor to allow creation of test doubles.</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.MonitoringClient.#ctor(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Protected constructor to allow creation of configured clients.</summary>
+            <param name="configuration">The client configuration.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.MonitoringClient.NewInstance(Grpc.Core.ClientBase.ClientBaseConfiguration)">
+            <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.BindService(Service.Assets.Contracts.Monitoring.MonitoringBase)">
+            <summary>Creates service definition that can be registered with a server</summary>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+        <member name="M:Service.Assets.Contracts.Monitoring.BindService(Grpc.Core.ServiceBinderBase,Service.Assets.Contracts.Monitoring.MonitoringBase)">
+            <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
+            Note: this method is part of an experimental API that can change or be removed without any prior notice.</summary>
+            <param name="serviceBinder">Service methods will be bound by calling <c>AddMethod</c> on this object.</param>
+            <param name="serviceImpl">An object implementing the server-side handling logic.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option csharp_namespace = "Service.Assets.Contracts";
+
+package common;
+
+import "google/protobuf/empty.proto";
+
+service Assets {
+    rpc GetAll (google.protobuf.Empty) returns (GetAllAssetsResponse);
+
+    rpc GetById (GetAssetByIdRequest) returns (GetAssetByIdResponse);
+
+    rpc Add (AddAssetRequest) returns (AddAssetResponse);
+
+    rpc Update (UpdateAssetRequest) returns (google.protobuf.Empty);
+
+    rpc Delete (DeleteAssetRequest) returns (google.protobuf.Empty);
+}
+
+message GetAllAssetsResponse {
+    repeated Asset assets = 1;
+}
+
+message GetAssetByIdRequest {
+    string assetId = 1;
+}
+
+message GetAssetByIdResponse {
+    Asset asset = 1;
+}
+
+message AddAssetRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    int32 accuracy = 4;
+}
+
+message AddAssetResponse {
+    Asset asset = 1;
+}
+
+message UpdateAssetRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    int32 accuracy = 4;
+}
+
+message DeleteAssetRequest {
+    string assetId = 1;
+}
+
+message Asset {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    int32 accuracy = 4;
+}
