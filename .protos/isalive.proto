@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option csharp_namespace = "Service.Assets.Contracts";
 
-package common;
+package com.swisschain.dictionaries.grpc;
 
 service Monitoring {
 	rpc IsAlive (IsAliveRequest) returns (IsAliveResponse);
