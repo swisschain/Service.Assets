@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Assets.WebApi.Models.IsAlive;
+using Assets.Client.Models.IsAlive;
 using Microsoft.AspNetCore.Mvc;
 using Swisschain.Sdk.Server.Common;
 

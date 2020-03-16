@@ -1,4 +1,4 @@
-namespace Assets.WebApi.Models.AssetPairs
+namespace Assets.Client.Models.AssetPairs
 {
     /// <summary>
     /// Represents an asset pair create/update information.

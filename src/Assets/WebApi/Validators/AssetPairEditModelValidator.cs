@@ -1,4 +1,4 @@
-using Assets.WebApi.Models.AssetPairs;
+using Assets.Client.Models.AssetPairs;
 using FluentValidation;
 
 namespace Assets.WebApi.Validators

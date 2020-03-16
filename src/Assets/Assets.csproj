@@ -13,11 +13,8 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
-    <PackageReference Include="Swisschain.Sdk.Server" Version="2.2.1" />
+    <PackageReference Include="Swisschain.Sdk.Server" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Assets.Client\Assets.Client.csproj" />
     <ProjectReference Include="..\Assets.Repositories\Assets.Repositories.csproj" />
     <ProjectReference Include="..\Assets.Services\Assets.Services.csproj" />
   </ItemGroup>

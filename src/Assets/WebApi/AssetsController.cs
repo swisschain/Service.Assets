@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Assets.Client.Models.Assets;
 using Assets.Domain.Services;
-using Assets.WebApi.Models.Assets;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 

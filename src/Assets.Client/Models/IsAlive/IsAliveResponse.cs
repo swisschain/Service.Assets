@@ -1,38 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
-namespace Assets.WebApi.Models.IsAlive
+namespace Assets.Client.Models.IsAlive
 {
     public class IsAliveResponse
     {
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
         
-        [JsonPropertyName("version")]
+        [JsonProperty("version")]
         public string Version { get; set; }
 
-        [JsonPropertyName("env")]
+        [JsonProperty("env")]
         public string Env { get; set; }
 
-        [JsonPropertyName("host")]
+        [JsonProperty("host")]
         public string HostName { get; set; }
 
-        [JsonPropertyName("isDebug")]
+        [JsonProperty("isDebug")]
         public bool IsDebug { get; set; }
 
-        [JsonPropertyName("startedAt")]
+        [JsonProperty("startedAt")]
         public DateTime StartedAt { get; set; }
 
-        [JsonPropertyName("issueIndicators")]
+        [JsonProperty("issueIndicators")]
         public List<StateIndicator> StateIndicators { get; set; }
 
         public class StateIndicator
         {
-            [JsonPropertyName("type")]
+            [JsonProperty("type")]
             public string Type { get; set; }
 
-            [JsonPropertyName("value")]
+            [JsonProperty("value")]
             public string Value { get; set; }
         }
     }

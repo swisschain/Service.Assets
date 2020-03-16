@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Assets.Client;
-using Google.Protobuf.WellKnownTypes;
-using Service.Assets.Contracts;
+using Assets.Client.Models.AssetPairs;
+using Assets.Client.Models.Assets;
 
 namespace TestClient
 {
@@ -12,7 +12,7 @@ namespace TestClient
         {
             Console.WriteLine("Press enter to start");
             Console.ReadLine();
-            var client = new AssetsClient("http://localhost:5001");
+            var client = new AssetsClient(new AssetsClientSettings {ServiceAddress = "http://localhost:5001"});
 
             var testData = new TestData();
 
@@ -35,7 +35,7 @@ namespace TestClient
         {
             foreach (var asset in testData.Assets)
             {
-                await client.Assets.AddAsync(new AddAssetRequest
+                await client.Assets.AddAsync(new AssetEditModel
                 {
                     Id = asset.Id, Name = asset.Name, Accuracy = asset.Accuracy, Description = asset.Description
                 });
@@ -44,11 +44,11 @@ namespace TestClient
 
         private static async Task GetAsync(AssetsClient client, TestData testData)
         {
-            var getAllResponse = await client.Assets.GetAllAsync(new Empty());
+            var getAllResponse = await client.Assets.GetAllAsync();
 
             foreach (var asset in testData.Assets)
             {
-                var getByIdResponse = await client.Assets.GetByIdAsync(new GetAssetByIdRequest {AssetId = asset.Id});
+                var getByIdResponse = await client.Assets.GetByIdAsync(asset.Id);
             }
         }
 
@@ -56,7 +56,7 @@ namespace TestClient
         {
             foreach (var asset in testData.Assets)
             {
-                await client.Assets.UpdateAsync(new UpdateAssetRequest
+                await client.Assets.UpdateAsync(new AssetEditModel
                 {
                     Id = asset.Id, Name = asset.Name, Accuracy = asset.Accuracy, Description = asset.Description
                 });
@@ -67,7 +67,7 @@ namespace TestClient
         {
             foreach (var asset in testData.Assets)
             {
-                await client.Assets.DeleteAsync(new DeleteAssetRequest {AssetId = asset.Id});
+                await client.Assets.DeleteAsync(asset.Id);
             }
         }
 
@@ -75,29 +75,28 @@ namespace TestClient
         {
             foreach (var assetPair in testData.AssetPairs)
             {
-                await client.AssetPairs.AddAsync(new AddAssetPairRequest
+                await client.AssetPairs.AddAsync(new AssetPairEditModel
                 {
                     Id = assetPair.Id,
                     Name = assetPair.Name,
                     Accuracy = assetPair.Accuracy,
                     BaseAssetId = assetPair.BaseAssetId,
                     QuotingAssetId = assetPair.QuotingAssetId,
-                    MinVolume = assetPair.MinVolume,
-                    MaxVolume = assetPair.MaxVolume,
-                    MaxOppositeVolume = assetPair.MaxOppositeVolume,
-                    MarketOrderPriceThreshold = assetPair.MarketOrderPriceThreshold
+                    MinVolume = decimal.Parse(assetPair.MinVolume),
+                    MaxVolume = decimal.Parse(assetPair.MaxVolume),
+                    MaxOppositeVolume = decimal.Parse(assetPair.MaxOppositeVolume),
+                    MarketOrderPriceThreshold = decimal.Parse(assetPair.MarketOrderPriceThreshold)
                 });
             }
         }
 
         private static async Task GetAssetPairsAsync(AssetsClient client, TestData testData)
         {
-            var getAllResponse = await client.AssetPairs.GetAllAsync(new Empty());
+            var getAllResponse = await client.AssetPairs.GetAllAsync();
 
-            foreach (var asset in testData.AssetPairs)
+            foreach (var assetPair in testData.AssetPairs)
             {
-                var getByIdResponse =
-                    await client.AssetPairs.GetByIdAsync(new GetAssetPairByIdRequest {AssetPairId = asset.Id});
+                var getByIdResponse = await client.AssetPairs.GetByIdAsync(assetPair.Id);
             }
         }
 
@@ -105,17 +104,17 @@ namespace TestClient
         {
             foreach (var assetPair in testData.AssetPairs)
             {
-                await client.AssetPairs.UpdateAsync(new UpdateAssetPairRequest
+                await client.AssetPairs.UpdateAsync(new AssetPairEditModel
                 {
                     Id = assetPair.Id,
                     Name = assetPair.Name,
                     Accuracy = assetPair.Accuracy,
                     BaseAssetId = assetPair.BaseAssetId,
                     QuotingAssetId = assetPair.QuotingAssetId,
-                    MinVolume = assetPair.MinVolume,
-                    MaxVolume = assetPair.MaxVolume,
-                    MaxOppositeVolume = assetPair.MaxOppositeVolume,
-                    MarketOrderPriceThreshold = assetPair.MarketOrderPriceThreshold
+                    MinVolume = decimal.Parse(assetPair.MinVolume),
+                    MaxVolume = decimal.Parse(assetPair.MaxVolume),
+                    MaxOppositeVolume = decimal.Parse(assetPair.MaxOppositeVolume),
+                    MarketOrderPriceThreshold = decimal.Parse(assetPair.MarketOrderPriceThreshold)
                 });
             }
         }
@@ -124,7 +123,7 @@ namespace TestClient
         {
             foreach (var assetPair in testData.AssetPairs)
             {
-                await client.AssetPairs.DeleteAsync(new DeleteAssetPairRequest {AssetPairId = assetPair.Id});
+                await client.AssetPairs.DeleteAsync(assetPair.Id);
             }
         }
     }

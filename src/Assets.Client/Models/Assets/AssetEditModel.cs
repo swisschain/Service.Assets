@@ -1,4 +1,4 @@
-namespace Assets.WebApi.Models.Assets
+namespace Assets.Client.Models.Assets
 {
     /// <summary>
     /// Represents an asset create/update information.

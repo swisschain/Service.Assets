@@ -1,6 +1,6 @@
+using Assets.Client.Models.AssetPairs;
+using Assets.Client.Models.Assets;
 using Assets.Domain.Entities;
-using Assets.WebApi.Models.AssetPairs;
-using Assets.WebApi.Models.Assets;
 using AutoMapper;
 
 namespace Assets

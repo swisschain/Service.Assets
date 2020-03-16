@@ -1,13 +1,20 @@
-﻿using Service.Assets.Contracts;
+﻿using Assets.Client.Api;
 
 namespace Assets.Client
 {
+    /// <summary>
+    /// Assets service client.
+    /// </summary>
     public interface IAssetsClient
     {
-        Monitoring.MonitoringClient Monitoring { get; }
+        /// <summary>
+        /// Assets API.
+        /// </summary>
+        IAssetsApi Assets { get; }
 
-        Service.Assets.Contracts.Assets.AssetsClient Assets { get; }
-
-        AssetPairs.AssetPairsClient AssetPairs { get; }
+        /// <summary>
+        /// Asset pairs API.
+        /// </summary>
+        IAssetPairsApi AssetPairs { get; }
     }
 }

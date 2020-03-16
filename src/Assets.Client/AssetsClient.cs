@@ -1,22 +1,28 @@
-﻿using Assets.Client.Common;
-using Service.Assets.Contracts;
+﻿using System;
+using Assets.Client.Api;
+using Assets.Client.Grpc;
 
 namespace Assets.Client
 {
-    public class AssetsClient : BaseGrpcClient, IAssetsClient
+    /// <inheritdoc /> 
+    public class AssetsClient : IAssetsClient
     {
-        public AssetsClient(string serverGrpcUrl)
-            : base(serverGrpcUrl)
+        /// <summary>
+        /// Initializes a new instance of <see cref="AssetsClient"/>.
+        /// </summary>
+        /// <param name="settings">The client settings.</param>
+        public AssetsClient(AssetsClientSettings settings)
         {
-            Monitoring = new Monitoring.MonitoringClient(Channel);
-            Assets = new Service.Assets.Contracts.Assets.AssetsClient(Channel);
-            AssetPairs = new AssetPairs.AssetPairsClient(Channel);
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+            Assets = new AssetsApi(settings.ServiceAddress);
+            AssetPairs = new AssetPairsApi(settings.ServiceAddress);
         }
 
-        public Monitoring.MonitoringClient Monitoring { get; }
+        /// <inheritdoc />
+        public IAssetsApi Assets { get; }
 
-        public Service.Assets.Contracts.Assets.AssetsClient Assets { get; }
-
-        public AssetPairs.AssetPairsClient AssetPairs { get; }
+        /// <inheritdoc />
+        public IAssetPairsApi AssetPairs { get; }
     }
 }

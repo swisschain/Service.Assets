@@ -5,11 +5,11 @@
     <Authors>Swisschain</Authors>
     <Company>Swisschain</Company>
     <Product>Swisschain.Service.Assets</Product>
-    <PackageId>Swisschain.Service.Assets</PackageId>
+    <PackageId>Swisschain.Service.Assets.Client</PackageId>
     <Description>Client for Swisschain.Service.Assets API</Description>
     <PackageLicenseUrl>https://github.com/SC-Poc/Service.Assets/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/SC-Poc/Service.Assets</PackageProjectUrl>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/14153330?v=3&amp;s=200</PackageIconUrl>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/14153330?v=3&amp;amp;s=200</PackageIconUrl>
     <RepositoryUrl>https://github.com/SC-Poc/Service.Assets.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Swisschain</PackageTags>
@@ -21,17 +21,22 @@
     <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>  
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="Google.Protobuf" Version="3.11.4" />
     <PackageReference Include="Grpc.Net.Client" Version="2.27.0" />
     <PackageReference Include="Grpc.Tools" Version="2.27.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="..\..\.protos\assets.proto" Link="Protos\assets.proto" />
     <Protobuf Include="..\..\.protos\asset-pairs.proto" Link="Protos\asset-pairs.proto" />
     <Protobuf Include="..\..\.protos\isalive.proto" Link="Protos\isalive.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models" />
   </ItemGroup>
   <!--
     The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.

@@ -1,12 +1,31 @@
 using System;
+using Service.Assets.Contracts;
 
-namespace Assets.WebApi.Models.Assets
+namespace Assets.Client.Models.Assets
 {
     /// <summary>
     /// Represents an asset.
     /// </summary>
     public class AssetModel
     {
+        /// <summary>
+        /// Initializes a new instance of <see cref="AssetModel"/>.
+        /// </summary>
+        public AssetModel()
+        {
+        }
+
+        internal AssetModel(Asset asset)
+        {
+            Id = asset.Id;
+            Name = asset.Name;
+            Description = asset.Description;
+            Accuracy = asset.Accuracy;
+            IsDisabled = asset.IsDisabled;
+            Created = asset.Created.ToDateTime();
+            Modified = asset.Modified.ToDateTime();
+        }
+        
         /// <summary>
         /// The unique identifier.
         /// </summary>
