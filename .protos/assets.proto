@@ -32,6 +32,7 @@ message AddAssetRequest {
     string name = 2;
     string description = 3;
     int32 accuracy = 4;
+    bool is_disabled = 5;
 }
 
 message AddAssetResponse {
@@ -43,6 +44,7 @@ message UpdateAssetRequest {
     string name = 2;
     string description = 3;
     int32 accuracy = 4;
+    bool is_disabled = 5;
 }
 
 message DeleteAssetRequest {

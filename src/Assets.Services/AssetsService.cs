@@ -29,7 +29,8 @@ namespace Assets.Services
             return _assetsRepository.GetByIdAsync(assetId);
         }
 
-        public async Task<Asset> AddAsync(string assetId, string name, string description, int accuracy)
+        public async Task<Asset> AddAsync(string assetId, string name, string description, int accuracy,
+            bool isDisabled)
         {
             var date = DateTime.UtcNow;
 
@@ -39,6 +40,7 @@ namespace Assets.Services
                 Name = name,
                 Description = description,
                 Accuracy = accuracy,
+                IsDisabled = isDisabled,
                 Created = date,
                 Modified = date
             };
@@ -50,13 +52,14 @@ namespace Assets.Services
             return asset;
         }
 
-        public async Task UpdateAsync(string assetId, string name, string description, int accuracy)
+        public async Task UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled)
         {
             var asset = await _assetsRepository.GetByIdAsync(assetId);
 
             asset.Name = name;
             asset.Description = description;
             asset.Accuracy = accuracy;
+            asset.IsDisabled = isDisabled;
             asset.Modified = DateTime.UtcNow;
 
             await _assetsRepository.UpdateAsync(asset);

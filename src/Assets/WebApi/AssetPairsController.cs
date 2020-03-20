@@ -45,7 +45,7 @@ namespace Assets.WebApi
         {
             var asset = await _assetPairsService.AddAsync(model.Id, model.Name, model.BaseAssetId, model.QuotingAssetId,
                 model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
-                model.MarketOrderPriceThreshold);
+                model.MarketOrderPriceThreshold, model.IsDisabled);
 
             var newModel = _mapper.Map<AssetPairModel>(asset);
 
@@ -57,7 +57,7 @@ namespace Assets.WebApi
         {
             await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId, model.QuotingAssetId,
                 model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
-                model.MarketOrderPriceThreshold);
+                model.MarketOrderPriceThreshold, model.IsDisabled);
 
             return NoContent();
         }

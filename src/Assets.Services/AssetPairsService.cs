@@ -31,7 +31,7 @@ namespace Assets.Services
 
         public async Task<AssetPair> AddAsync(string assetPairId, string name, string baseAssetId,
             string quotingAssetId, int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
-            decimal marketOrderPriceThreshold)
+            decimal marketOrderPriceThreshold, bool isDisabled)
         {
             var date = DateTime.UtcNow;
 
@@ -46,6 +46,7 @@ namespace Assets.Services
                 MaxVolume = maxVolume,
                 MaxOppositeVolume = maxOppositeVolume,
                 MarketOrderPriceThreshold = marketOrderPriceThreshold,
+                IsDisabled = isDisabled,
                 Created = date,
                 Modified = date
             };
@@ -59,7 +60,7 @@ namespace Assets.Services
 
         public async Task UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
-            decimal marketOrderPriceThreshold)
+            decimal marketOrderPriceThreshold, bool isDisabled)
         {
             var assetPair = await _assetPairsRepository.GetByIdAsync(assetPairId);
 
@@ -71,6 +72,7 @@ namespace Assets.Services
             assetPair.MaxVolume = maxVolume;
             assetPair.MaxOppositeVolume = maxOppositeVolume;
             assetPair.MarketOrderPriceThreshold = marketOrderPriceThreshold;
+            assetPair.IsDisabled = isDisabled;
             assetPair.Modified = DateTime.UtcNow;
 
             await _assetPairsRepository.UpdateAsync(assetPair);

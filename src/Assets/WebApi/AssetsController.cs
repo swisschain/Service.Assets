@@ -43,7 +43,8 @@ namespace Assets.WebApi
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] AssetEditModel model)
         {
-            var asset = await _assetsService.AddAsync(model.Id, model.Name, model.Description, model.Accuracy);
+            var asset = await _assetsService.AddAsync(model.Id, model.Name, model.Description, model.Accuracy,
+                model.IsDisabled);
 
             var newModel = _mapper.Map<AssetModel>(asset);
 
@@ -53,7 +54,7 @@ namespace Assets.WebApi
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetEditModel model)
         {
-            await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy);
+            await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
             return NoContent();
         }

@@ -51,6 +51,7 @@ namespace Assets.Client.Grpc
                 MaxVolume = model.MaxVolume.ToString(CultureInfo.InvariantCulture),
                 MaxOppositeVolume = model.MaxOppositeVolume.ToString(CultureInfo.InvariantCulture),
                 MarketOrderPriceThreshold = model.MarketOrderPriceThreshold.ToString(CultureInfo.InvariantCulture),
+                IsDisabled = model.IsDisabled
             });
 
             return new AssetPairModel(response.AssetPair);
@@ -69,6 +70,7 @@ namespace Assets.Client.Grpc
                 MaxVolume = model.MaxVolume.ToString(CultureInfo.InvariantCulture),
                 MaxOppositeVolume = model.MaxOppositeVolume.ToString(CultureInfo.InvariantCulture),
                 MarketOrderPriceThreshold = model.MarketOrderPriceThreshold.ToString(CultureInfo.InvariantCulture),
+                IsDisabled = model.IsDisabled
             });
         }
 

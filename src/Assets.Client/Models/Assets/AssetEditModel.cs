@@ -24,5 +24,10 @@ namespace Assets.Client.Models.Assets
         /// The number of decimal places.
         /// </summary>
         public int Accuracy { get; set; }
+
+        /// <summary>
+        /// Indicates that the asset is disabled.
+        /// </summary>
+        public bool IsDisabled { get; set; }
     }
 }

@@ -41,7 +41,11 @@ namespace Assets.Client.Grpc
         {
             var response = await _client.AddAsync(new AddAssetRequest
             {
-                Id = model.Id, Name = model.Name, Description = model.Description, Accuracy = model.Accuracy
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description,
+                Accuracy = model.Accuracy,
+                IsDisabled = model.IsDisabled
             });
 
             return new AssetModel(response.Asset);
@@ -51,7 +55,11 @@ namespace Assets.Client.Grpc
         {
             await _client.UpdateAsync(new UpdateAssetRequest
             {
-                Id = model.Id, Name = model.Name, Description = model.Description, Accuracy = model.Accuracy
+                Id = model.Id,
+                Name = model.Name,
+                Description = model.Description,
+                Accuracy = model.Accuracy,
+                IsDisabled = model.IsDisabled
             });
         }
 

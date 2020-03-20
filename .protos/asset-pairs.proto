@@ -37,6 +37,7 @@ message AddAssetPairRequest {
     string maxVolume = 7;
     string maxOppositeVolume = 8;
     string marketOrderPriceThreshold = 9;
+    bool is_disabled = 10;
 }
 
 message AddAssetPairResponse {
@@ -53,6 +54,7 @@ message UpdateAssetPairRequest {
     string maxVolume = 7;
     string maxOppositeVolume = 8;
     string marketOrderPriceThreshold = 9;
+    bool is_disabled = 10;
 }
 
 message DeleteAssetPairRequest {

@@ -49,5 +49,10 @@ namespace Assets.Client.Models.AssetPairs
         /// The market order price threshold.
         /// </summary>
         public decimal MarketOrderPriceThreshold { get; set; }
+
+        /// <summary>
+        /// Indicates that the asset pair is disabled.
+        /// </summary>
+        public bool IsDisabled { get; set; }
     }
 }
