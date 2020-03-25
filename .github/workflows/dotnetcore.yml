@@ -22,7 +22,7 @@ jobs:
     - name: Check dir
       run: ls ./publish
     - name: Publish to Registry
-      uses: SC-Poc/Publish-Docker-Github-Action@master
+      uses: swisschain/Publish-Docker-Github-Action@master
       with:
         name: swisschains/service-assets
         username: ${{ secrets.DOCKER_USERNAME }}
