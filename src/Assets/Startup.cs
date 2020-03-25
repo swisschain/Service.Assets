@@ -70,7 +70,7 @@ namespace Assets
                     options.RegisterValidatorsFromAssembly(Assembly.GetEntryAssembly());
                 });
 
-            var key = Encoding.ASCII.GetBytes(Config.AssetsService.Secret);
+            var key = Encoding.ASCII.GetBytes(Config.Jwt.Secret);
 
             services
                 .AddAuthentication(x =>

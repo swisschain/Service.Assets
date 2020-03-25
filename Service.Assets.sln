@@ -5,12 +5,13 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Client", "3. Client", "{655225E4-2F4C-4D07-82FB-7B4947EF5A7A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Solution items", "Solution items", "{85EB7950-61F2-4B83-9F3E-F74ECCE0D3C8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Solution items", "0. Solution items", "{85EB7950-61F2-4B83-9F3E-F74ECCE0D3C8}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		format.appsettings.json = format.appsettings.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -28,31 +29,31 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{00B92DA6-6A25-4749-B17A-40E9575F18B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0F87BFBB-9F81-4B65-8A65-5C175E0362D9}"
-ProjectSection(SolutionItems) = preProject
-	.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
-	.github\workflows\nuget-client.yml = .github\workflows\nuget-client.yml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+		.github\workflows\nuget-client.yml = .github\workflows\nuget-client.yml
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Domain", "src\Assets.Domain\Assets.Domain.csproj", "{89EB4BF0-9E78-4689-B50F-12FEC8F9AB61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assets.Domain", "src\Assets.Domain\Assets.Domain.csproj", "{89EB4BF0-9E78-4689-B50F-12FEC8F9AB61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Services", "src\Assets.Services\Assets.Services.csproj", "{90AF758C-F767-418A-B633-0E58D0782A8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assets.Services", "src\Assets.Services\Assets.Services.csproj", "{90AF758C-F767-418A-B633-0E58D0782A8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Services.Tests", "tests\Assets.Services.Tests\Assets.Services.Tests.csproj", "{C3127E85-A385-453F-A525-E50365DA6372}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assets.Services.Tests", "tests\Assets.Services.Tests\Assets.Services.Tests.csproj", "{C3127E85-A385-453F-A525-E50365DA6372}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Repositories", "src\Assets.Repositories\Assets.Repositories.csproj", "{837793B8-D8BC-426D-ADD5-A51247E7B0E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assets.Repositories", "src\Assets.Repositories\Assets.Repositories.csproj", "{837793B8-D8BC-426D-ADD5-A51247E7B0E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Repositories.Tests", "tests\Assets.Repositories.Tests\Assets.Repositories.Tests.csproj", "{2A0A751D-BA9E-4F9D-9F95-745892A45EA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assets.Repositories.Tests", "tests\Assets.Repositories.Tests\Assets.Repositories.Tests.csproj", "{2A0A751D-BA9E-4F9D-9F95-745892A45EA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Tests", "tests\Assets.Tests\Assets.Tests.csproj", "{2621FA16-4E25-4226-9760-6C877B86D192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Assets.Tests", "tests\Assets.Tests\Assets.Tests.csproj", "{2621FA16-4E25-4226-9760-6C877B86D192}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "tests\TestClient\TestClient.csproj", "{1C6BCAA0-FE14-498B-9EF5-523F29531BEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestClient", "tests\TestClient\TestClient.csproj", "{1C6BCAA0-FE14-498B-9EF5-523F29531BEA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".protos", ".protos", "{A08D0305-E4A8-4C77-B4D2-DA5C1B3B2FE8}"
-ProjectSection(SolutionItems) = preProject
-	.protos\isalive.proto = .protos\isalive.proto
-	.protos\assets.proto = .protos\assets.proto
-	.protos\asset-pairs.proto = .protos\asset-pairs.proto
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		.protos\asset-pairs.proto = .protos\asset-pairs.proto
+		.protos\assets.proto = .protos\assets.proto
+		.protos\isalive.proto = .protos\isalive.proto
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

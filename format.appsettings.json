@@ -1,0 +1,15 @@
+{
+  "AssetsService": {
+    "Db": {
+      "DataConnectionString": "${AssetsServiceDataConnectionString}"
+    }
+  },
+  "Jwt": {
+    "Secret": "${JwtTokenSecret}"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Trace"
+    }
+  }
+}
