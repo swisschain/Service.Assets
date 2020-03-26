@@ -38,4 +38,8 @@
     <Protobuf Include="..\..\.protos\isalive.proto" Link="Protos\isalive.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WebApi\Models\Pagination\" />
+  </ItemGroup>
+
 </Project>

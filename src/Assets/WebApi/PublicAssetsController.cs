@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Assets.Client.Models;
-using Assets.Client.Models.Assets;
 using Assets.Domain.Services;
 using Assets.Extensions;
 using AutoMapper;
@@ -46,9 +45,9 @@ namespace Assets.WebApi
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize);
 
-            var model = _mapper.Map<List<AssetModel>>(query.ToList());
+            var model = _mapper.Map<List<Models.Assets.Asset>>(query.ToList());
 
-            return Ok(new PagedResponse<AssetModel> { Items = model, Total = count });
+            return Ok(new PagedResponse<Models.Assets.Asset> { Items = model, Total = count });
         }
 
         [HttpGet("{assetId}")]
@@ -56,25 +55,25 @@ namespace Assets.WebApi
         {
             var asset = await _assetsService.GetByIdAsync(assetId);
 
-            var model = _mapper.Map<AssetModel>(asset);
+            var model = _mapper.Map<Models.Assets.Asset>(asset);
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AssetEditModel model)
+        public async Task<IActionResult> AddAsync([FromBody] Models.Assets.AssetEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
 
             var asset = await _assetsService.AddAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
-            var newModel = _mapper.Map<AssetModel>(asset);
+            var newModel = _mapper.Map<Models.Assets.Asset>(asset);
 
             return Ok(newModel);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] AssetEditModel model)
+        public async Task<IActionResult> UpdateAsync([FromBody] Models.Assets.AssetEdit model)
         {
             await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 

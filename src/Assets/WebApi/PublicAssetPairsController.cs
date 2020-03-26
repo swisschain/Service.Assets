@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Assets.Client.Models;
-using Assets.Client.Models.AssetPairs;
 using Assets.Domain.Services;
 using Assets.Extensions;
 using AutoMapper;
@@ -47,9 +46,9 @@ namespace Assets.WebApi
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize);
 
-            var model = _mapper.Map<List<AssetPairModel>>(query.ToList());
+            var model = _mapper.Map<List<Models.AssetPairs.AssetPair>>(query.ToList());
 
-            return Ok(new PagedResponse<AssetPairModel> { Items = model, Total = count });
+            return Ok(new PagedResponse<Models.AssetPairs.AssetPair> { Items = model, Total = count });
         }
 
         [HttpGet("{assetPairId}")]
@@ -57,26 +56,26 @@ namespace Assets.WebApi
         {
             var assetPair = await _assetPairsService.GetByIdAsync(assetPairId);
 
-            var model = _mapper.Map<AssetPairModel>(assetPair);
+            var model = _mapper.Map<Models.AssetPairs.AssetPair>(assetPair);
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AssetPairEditModel model)
+        public async Task<IActionResult> AddAsync([FromBody] Models.AssetPairs.AssetPairEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
             var asset = await _assetPairsService.AddAsync(model.Id, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 
-            var newModel = _mapper.Map<AssetPairModel>(asset);
+            var newModel = _mapper.Map<Models.AssetPairs.AssetPair>(asset);
 
             return Ok(newModel);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEditModel model)
+        public async Task<IActionResult> UpdateAsync([FromBody] Models.AssetPairs.AssetPairEdit model)
         {
             await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
