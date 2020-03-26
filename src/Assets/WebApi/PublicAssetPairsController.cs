@@ -7,10 +7,12 @@ using Assets.Client.Models.AssetPairs;
 using Assets.Domain.Services;
 using Assets.Extensions;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assets.WebApi
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PublicAssetPairsController : ControllerBase

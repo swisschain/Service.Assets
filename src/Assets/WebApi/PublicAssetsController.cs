@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Assets.WebApi
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PublicAssetsController : ControllerBase
@@ -27,7 +28,7 @@ namespace Assets.WebApi
 
         [HttpGet]
         public async Task<IActionResult> GetAsync(string filter, string sortField, string sortOrder, int pageIndex,
-            int pageSize)
+            int pageSize=100)
         {
             var assets = await _assetsService.GetAllAsync();
 
