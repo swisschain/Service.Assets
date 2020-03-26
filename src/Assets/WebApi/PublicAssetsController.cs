@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Assets.Client.Models;
 using Assets.Domain.Services;
-using Assets.Extensions;
+using Assets.WebApi.Models.Assets;
+using Assets.WebApi.Models.Pagination;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,28 +26,52 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync(string filter, string sortField, string sortOrder, int pageIndex,
-            int pageSize=100)
+        public async Task<IActionResult> GetManyAsync([FromQuery] AssetRequestMany assetRequestMany)
         {
+            if (assetRequestMany.Limit > 1000)
+            {
+                ModelState.AddModelError($"{nameof(assetRequestMany.Limit)}", "Should not be more than 1000");
+
+                return BadRequest(ModelState);
+            }
+
+            var take = assetRequestMany.Limit;
+            var cursor = assetRequestMany.Cursor;
+            var sortOrder = assetRequestMany.Order == PaginationOrder.Asc;
+            var idFilter = assetRequestMany.AssetId;
+            var nameFilter = assetRequestMany.Name;
+
             var assets = await _assetsService.GetAllAsync();
 
             var query = assets.AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter))
-                query = query.Where(asset => asset.Name.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
+            if(!string.IsNullOrEmpty(idFilter))
+                query = query.Where(asset => asset.Id.Contains(idFilter, StringComparison.InvariantCultureIgnoreCase));
 
-            if (!string.IsNullOrEmpty(sortField))
-                query = query.Order(sortField, sortOrder);
+            if (!string.IsNullOrEmpty(nameFilter))
+                query = query.Where(asset => asset.Name.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase));
 
-            var count = query.Count();
+            if (sortOrder)
+            {
+                if (cursor != null)
+                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) >= 0);
 
-            query = query
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize);
+                query = query
+                    .OrderBy(x => x.Id);
+            }
+            else
+            {
+                if (cursor != null)
+                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) < 0);
 
-            var model = _mapper.Map<List<Models.Assets.Asset>>(query.ToList());
+                query = query.OrderByDescending(x => x.Id);
+            }
 
-            return Ok(new PagedResponse<Models.Assets.Asset> { Items = model, Total = count });
+            query = query.Take(take);
+
+            var model = _mapper.Map<List<Asset>>(query.ToList());
+
+            return Ok(model.Paginate(assetRequestMany, Url, x => x.Id));
         }
 
         [HttpGet("{assetId}")]
@@ -55,25 +79,25 @@ namespace Assets.WebApi
         {
             var asset = await _assetsService.GetByIdAsync(assetId);
 
-            var model = _mapper.Map<Models.Assets.Asset>(asset);
+            var model = _mapper.Map<Asset>(asset);
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] Models.Assets.AssetEdit model)
+        public async Task<IActionResult> AddAsync([FromBody] AssetEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
 
             var asset = await _assetsService.AddAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
-            var newModel = _mapper.Map<Models.Assets.Asset>(asset);
+            var newModel = _mapper.Map<Asset>(asset);
 
             return Ok(newModel);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] Models.Assets.AssetEdit model)
+        public async Task<IActionResult> UpdateAsync([FromBody] AssetEdit model)
         {
             await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
