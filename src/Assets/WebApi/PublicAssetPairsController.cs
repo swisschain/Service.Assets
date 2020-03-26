@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Assets.Client.Models;
 using Assets.Domain.Services;
-using Assets.Extensions;
+using Assets.WebApi.Models.AssetPairs;
+using Assets.WebApi.Models.Pagination;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,29 +26,52 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync(string filter, string sortField, string sortOrder, int pageIndex,
-            int pageSize)
+        public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany assetPairRequestMany)
         {
-            var assetPairs = await _assetPairsService.GetAllAsync();
+            if (assetPairRequestMany.Limit > 1000)
+            {
+                ModelState.AddModelError($"{nameof(assetPairRequestMany.Limit)}", "Should not be more than 1000");
 
-            var query = assetPairs.AsQueryable();
+                return BadRequest(ModelState);
+            }
 
-            if (!string.IsNullOrEmpty(filter))
-                query = query.Where(assetPair =>
-                    assetPair.Name.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
+            var take = assetPairRequestMany.Limit;
+            var cursor = assetPairRequestMany.Cursor;
+            var sortOrder = assetPairRequestMany.Order == PaginationOrder.Asc;
+            var idFilter = assetPairRequestMany.AssetPairId;
+            var nameFilter = assetPairRequestMany.Name;
 
-            if (!string.IsNullOrEmpty(sortField))
-                query = query.Order(sortField, sortOrder);
+            var assets = await _assetPairsService.GetAllAsync();
 
-            var count = query.Count();
+            var query = assets.AsQueryable();
 
-            query = query
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize);
+            if (!string.IsNullOrEmpty(idFilter))
+                query = query.Where(asset => asset.Id.Contains(idFilter, StringComparison.InvariantCultureIgnoreCase));
 
-            var model = _mapper.Map<List<Models.AssetPairs.AssetPair>>(query.ToList());
+            if (!string.IsNullOrEmpty(nameFilter))
+                query = query.Where(asset => asset.Name.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase));
 
-            return Ok(new PagedResponse<Models.AssetPairs.AssetPair> { Items = model, Total = count });
+            if (sortOrder)
+            {
+                if (cursor != null)
+                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) >= 0);
+
+                query = query
+                    .OrderBy(x => x.Id);
+            }
+            else
+            {
+                if (cursor != null)
+                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) < 0);
+
+                query = query.OrderByDescending(x => x.Id);
+            }
+
+            query = query.Take(take);
+
+            var model = _mapper.Map<List<AssetPair>>(query.ToList());
+
+            return Ok(model.Paginate(assetPairRequestMany, Url, x => x.Id));
         }
 
         [HttpGet("{assetPairId}")]
@@ -56,26 +79,26 @@ namespace Assets.WebApi
         {
             var assetPair = await _assetPairsService.GetByIdAsync(assetPairId);
 
-            var model = _mapper.Map<Models.AssetPairs.AssetPair>(assetPair);
+            var model = _mapper.Map<AssetPair>(assetPair);
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] Models.AssetPairs.AssetPairEdit model)
+        public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
             var asset = await _assetPairsService.AddAsync(model.Id, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 
-            var newModel = _mapper.Map<Models.AssetPairs.AssetPair>(asset);
+            var newModel = _mapper.Map<AssetPair>(asset);
 
             return Ok(newModel);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] Models.AssetPairs.AssetPairEdit model)
+        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
         {
             await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
