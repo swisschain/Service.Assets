@@ -15,7 +15,7 @@ namespace Assets.WebApi
 {
     [Authorize]
     [ApiController]
-    [Route("api/assets")]
+    [Route("api/public-assets")]
     public class PublicAssetsController : ControllerBase
     {
         private readonly IAssetsService _assetsService;
