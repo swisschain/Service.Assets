@@ -4,16 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
 using Assets.WebApi.Models.AssetPairs;
+using Assets.WebApi.Models.Common;
 using Assets.WebApi.Models.Pagination;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assets.WebApi
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/asset-pairs")]
     public class PublicAssetPairsController : ControllerBase
     {
         private readonly IAssetPairsService _assetPairsService;
@@ -26,6 +28,8 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(AssetPairRequestMany), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany assetPairRequestMany)
         {
             if (assetPairRequestMany.Limit > 1000)
@@ -75,9 +79,15 @@ namespace Assets.WebApi
         }
 
         [HttpGet("{assetPairId}")]
+        [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(string assetPairId)
         {
             var assetPair = await _assetPairsService.GetByIdAsync(assetPairId);
+
+            if (assetPair == null)
+                return NotFound();
 
             var model = _mapper.Map<AssetPair>(assetPair);
 
@@ -85,6 +95,8 @@ namespace Assets.WebApi
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
@@ -98,19 +110,30 @@ namespace Assets.WebApi
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
         {
-            await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
+            var found = await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
+
+            if (!found)
+                return NotFound();
 
             return NoContent();
         }
 
         [HttpDelete("{assetPairId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string assetPairId)
         {
-            await _assetPairsService.DeleteAsync(assetPairId);
+            var found = await _assetPairsService.DeleteAsync(assetPairId);
+
+            if (!found)
+                return NotFound();
 
             return NoContent();
         }

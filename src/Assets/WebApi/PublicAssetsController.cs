@@ -4,16 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
 using Assets.WebApi.Models.Assets;
+using Assets.WebApi.Models.Common;
 using Assets.WebApi.Models.Pagination;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Assets.WebApi
 {
     [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/assets")]
     public class PublicAssetsController : ControllerBase
     {
         private readonly IAssetsService _assetsService;
@@ -26,6 +28,8 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(AssetRequestMany), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetManyAsync([FromQuery] AssetRequestMany assetRequestMany)
         {
             if (assetRequestMany.Limit > 1000)
@@ -75,9 +79,15 @@ namespace Assets.WebApi
         }
 
         [HttpGet("{assetId}")]
+        [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(string assetId)
         {
             var asset = await _assetsService.GetByIdAsync(assetId);
+
+            if (asset == null)
+                return NotFound();
 
             var model = _mapper.Map<Asset>(asset);
 
@@ -85,6 +95,8 @@ namespace Assets.WebApi
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAsync([FromBody] AssetEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
@@ -97,17 +109,28 @@ namespace Assets.WebApi
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetEdit model)
         {
-            await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            var found = await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+
+            if (!found)
+                return NotFound();
 
             return NoContent();
         }
 
         [HttpDelete("{assetId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string assetId)
         {
-            await _assetsService.DeleteAsync(assetId);
+            var found = await _assetsService.DeleteAsync(assetId);
+
+            if (!found)
+                return NotFound();
 
             return NoContent();
         }

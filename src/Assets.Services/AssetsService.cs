@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.Domain.Entities;
@@ -52,9 +52,12 @@ namespace Assets.Services
             return asset;
         }
 
-        public async Task UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled)
+        public async Task<bool> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled)
         {
             var asset = await _assetsRepository.GetByIdAsync(assetId);
+
+            if (asset == null)
+                return false;
 
             asset.Name = name;
             asset.Description = description;
@@ -65,15 +68,22 @@ namespace Assets.Services
             await _assetsRepository.UpdateAsync(asset);
 
             _logger.LogInformation("Asset updated. {$Asset}", asset);
+
+            return true;
         }
 
-        public async Task DeleteAsync(string assetId)
+        public async Task<bool> DeleteAsync(string assetId)
         {
             var asset = await _assetsRepository.GetByIdAsync(assetId);
+
+            if (asset == null)
+                return false;
 
             await _assetsRepository.DeleteAsync(assetId);
 
             _logger.LogInformation("Asset deleted. {$Asset}", asset);
+
+            return true;
         }
     }
 }

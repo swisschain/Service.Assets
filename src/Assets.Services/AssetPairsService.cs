@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.Domain.Entities;
@@ -58,11 +58,14 @@ namespace Assets.Services
             return assetPair;
         }
 
-        public async Task UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
+        public async Task<bool> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
             var assetPair = await _assetPairsRepository.GetByIdAsync(assetPairId);
+
+            if (assetPair == null)
+                return false;
 
             assetPair.Name = name;
             assetPair.BaseAssetId = baseAssetId;
@@ -78,15 +81,22 @@ namespace Assets.Services
             await _assetPairsRepository.UpdateAsync(assetPair);
 
             _logger.LogInformation("Asset pair updated. {$AssetPair}", assetPair);
+
+            return true;
         }
 
-        public async Task DeleteAsync(string assetPairId)
+        public async Task<bool> DeleteAsync(string assetPairId)
         {
             var assetPair = await _assetPairsRepository.GetByIdAsync(assetPairId);
+
+            if (assetPair == null)
+                return false;
 
             await _assetPairsRepository.DeleteAsync(assetPairId);
 
             _logger.LogInformation("Asset pair deleted. {$AssetPair}", assetPair);
+
+            return true;
         }
     }
 }
