@@ -80,7 +80,6 @@ namespace Assets.WebApi
 
         [HttpGet("{assetPairId}")]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(string assetPairId)
         {
@@ -96,7 +95,6 @@ namespace Assets.WebApi
 
         [HttpPost]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
@@ -110,8 +108,8 @@ namespace Assets.WebApi
         }
 
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
         {
             var found = await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
@@ -121,12 +119,15 @@ namespace Assets.WebApi
             if (!found)
                 return NotFound();
 
-            return NoContent();
+            var updatedModel = _assetPairsService.GetByIdAsync(model.Id);
+
+            var newModel = _mapper.Map<AssetPair>(updatedModel);
+
+            return Ok(newModel);
         }
 
         [HttpDelete("{assetPairId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string assetPairId)
         {
@@ -135,7 +136,7 @@ namespace Assets.WebApi
             if (!found)
                 return NotFound();
 
-            return NoContent();
+            return Ok();
         }
     }
 }

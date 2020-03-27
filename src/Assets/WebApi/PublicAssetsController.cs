@@ -80,7 +80,6 @@ namespace Assets.WebApi
 
         [HttpGet("{assetId}")]
         [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(string assetId)
         {
@@ -96,7 +95,6 @@ namespace Assets.WebApi
 
         [HttpPost]
         [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAsync([FromBody] AssetEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
@@ -110,7 +108,7 @@ namespace Assets.WebApi
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetEdit model)
         {
             var found = await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
@@ -118,12 +116,15 @@ namespace Assets.WebApi
             if (!found)
                 return NotFound();
 
-            return NoContent();
+            var updatedModel = _assetsService.GetByIdAsync(model.Id);
+
+            var newModel = _mapper.Map<Asset>(updatedModel);
+
+            return Ok(newModel);
         }
 
         [HttpDelete("{assetId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string assetId)
         {
@@ -132,7 +133,7 @@ namespace Assets.WebApi
             if (!found)
                 return NotFound();
 
-            return NoContent();
+            return Ok();
         }
     }
 }
