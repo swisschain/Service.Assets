@@ -55,6 +55,8 @@ namespace Assets.WebApi
             if (!string.IsNullOrEmpty(nameFilter))
                 query = query.Where(asset => asset.Name.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase));
 
+            query = query.Where(asset => asset.IsDisabled == assetRequestMany.IsDisabled);
+
             if (sortOrder)
             {
                 if (cursor != null)

@@ -44,6 +44,8 @@ namespace Assets.WebApi
             var sortOrder = assetPairRequestMany.Order == PaginationOrder.Asc;
             var idFilter = assetPairRequestMany.AssetPairId;
             var nameFilter = assetPairRequestMany.Name;
+            var baseIdFilter = assetPairRequestMany.BaseAssetId;
+            var quoteIdFilter = assetPairRequestMany.QuoteAssetId;
 
             var assets = await _assetPairsService.GetAllAsync();
 
@@ -54,6 +56,14 @@ namespace Assets.WebApi
 
             if (!string.IsNullOrEmpty(nameFilter))
                 query = query.Where(asset => asset.Name.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase));
+
+            if (!string.IsNullOrEmpty(baseIdFilter))
+                query = query.Where(asset => asset.BaseAssetId.Contains(baseIdFilter, StringComparison.InvariantCultureIgnoreCase));
+
+            if (!string.IsNullOrEmpty(quoteIdFilter))
+                query = query.Where(asset => asset.QuotingAssetId.Contains(quoteIdFilter, StringComparison.InvariantCultureIgnoreCase));
+
+            query = query.Where(asset => asset.IsDisabled == assetPairRequestMany.IsDisabled);
 
             if (sortOrder)
             {

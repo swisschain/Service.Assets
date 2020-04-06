@@ -1,4 +1,4 @@
-using Assets.Repositories.Entities;
+﻿using Assets.Repositories.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 

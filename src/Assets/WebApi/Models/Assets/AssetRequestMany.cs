@@ -5,5 +5,7 @@
         public string Name { get; set; }
 
         public string AssetId { get; set; }
+
+        public bool IsDisabled { get; set; }
     }
 }
