@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Assets.Domain.Entities;
 using Assets.Domain.Repositories;
@@ -22,6 +23,12 @@ namespace Assets.Services
         public Task<IReadOnlyList<Asset>> GetAllAsync()
         {
             return _assetsRepository.GetAllAsync();
+        }
+
+        public Task<IReadOnlyList<Asset>> GetAllAsync(string name, string assetId, bool isDisabled = false,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
+        {
+            return _assetsRepository.GetAllAsync(name, assetId, isDisabled, sortOrder, cursor, limit);
         }
 
         public Task<Asset> GetByIdAsync(string assetId)

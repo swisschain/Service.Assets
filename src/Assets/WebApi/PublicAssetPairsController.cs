@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
 using Assets.WebApi.Models.AssetPairs;
@@ -30,62 +30,25 @@ namespace Assets.WebApi
         [HttpGet]
         [ProducesResponseType(typeof(AssetPairRequestMany), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany assetPairRequestMany)
+        public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany request)
         {
-            if (assetPairRequestMany.Limit > 1000)
+            if (request.Limit > 1000)
             {
-                ModelState.AddModelError($"{nameof(assetPairRequestMany.Limit)}", "Should not be more than 1000");
+                ModelState.AddModelError($"{nameof(request.Limit)}", "Should not be more than 1000");
 
                 return BadRequest(ModelState);
             }
 
-            var take = assetPairRequestMany.Limit;
-            var cursor = assetPairRequestMany.Cursor;
-            var sortOrder = assetPairRequestMany.Order == PaginationOrder.Asc;
-            var idFilter = assetPairRequestMany.AssetPairId;
-            var nameFilter = assetPairRequestMany.Name;
-            var baseIdFilter = assetPairRequestMany.BaseAssetId;
-            var quoteIdFilter = assetPairRequestMany.QuoteAssetId;
+            var sortOrder = request.Order == PaginationOrder.Asc
+                ? ListSortDirection.Ascending
+                : ListSortDirection.Descending;
 
-            var assets = await _assetPairsService.GetAllAsync();
+            var assetPairs = await _assetPairsService.GetAllAsync(request.Name, request.AssetPairId, request.BaseAssetId, request.QuoteAssetId,
+                request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
-            var query = assets.AsQueryable();
+            var result = _mapper.Map<List<AssetPair>>(assetPairs);
 
-            if (!string.IsNullOrEmpty(idFilter))
-                query = query.Where(asset => asset.Id.Contains(idFilter, StringComparison.InvariantCultureIgnoreCase));
-
-            if (!string.IsNullOrEmpty(nameFilter))
-                query = query.Where(asset => asset.Name.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase));
-
-            if (!string.IsNullOrEmpty(baseIdFilter))
-                query = query.Where(asset => asset.BaseAssetId.Contains(baseIdFilter, StringComparison.InvariantCultureIgnoreCase));
-
-            if (!string.IsNullOrEmpty(quoteIdFilter))
-                query = query.Where(asset => asset.QuotingAssetId.Contains(quoteIdFilter, StringComparison.InvariantCultureIgnoreCase));
-
-            query = query.Where(asset => asset.IsDisabled == assetPairRequestMany.IsDisabled);
-
-            if (sortOrder)
-            {
-                if (cursor != null)
-                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) >= 0);
-
-                query = query
-                    .OrderBy(x => x.Id);
-            }
-            else
-            {
-                if (cursor != null)
-                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) < 0);
-
-                query = query.OrderByDescending(x => x.Id);
-            }
-
-            query = query.Take(take);
-
-            var model = _mapper.Map<List<AssetPair>>(query.ToList());
-
-            return Ok(model.Paginate(assetPairRequestMany, Url, x => x.Id));
+            return Ok(result.Paginate(request, Url, x => x.Id));
         }
 
         [HttpGet("{assetPairId}")]

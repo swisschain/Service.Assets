@@ -1,4 +1,7 @@
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Assets.Domain.Entities;
 using Assets.Domain.Repositories;
@@ -26,6 +29,50 @@ namespace Assets.Repositories
             {
                 var entities = await context.AssetPairs
                     .ToListAsync();
+
+                return _mapper.Map<List<AssetPair>>(entities);
+            }
+        }
+
+        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(string name, string assetPairId, string baseAssetId, string quoteAssetId,
+            bool isDisabled = false, ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                IQueryable<AssetPairEntity> query = context.AssetPairs;
+
+                if (!string.IsNullOrEmpty(assetPairId))
+                    query = query.Where(assetPair => assetPair.Id.Contains(assetPairId, StringComparison.InvariantCultureIgnoreCase));
+
+                if (!string.IsNullOrEmpty(baseAssetId))
+                    query = query.Where(assetPair => assetPair.BaseAssetId.Contains(baseAssetId, StringComparison.InvariantCultureIgnoreCase));
+
+                if (!string.IsNullOrEmpty(quoteAssetId))
+                    query = query.Where(assetPair => assetPair.QuotingAssetId.Contains(quoteAssetId, StringComparison.InvariantCultureIgnoreCase));
+
+                if (!string.IsNullOrEmpty(name))
+                    query = query.Where(asset => asset.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
+
+                query = query.Where(asset => asset.IsDisabled == isDisabled);
+
+                if (sortOrder == ListSortDirection.Ascending)
+                {
+                    if (cursor != null)
+                        query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) >= 0);
+
+                    query = query.OrderBy(x => x.Id);
+                }
+                else
+                {
+                    if (cursor != null)
+                        query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) < 0);
+
+                    query = query.OrderByDescending(x => x.Id);
+                }
+
+                query = query.Take(limit);
+
+                var entities = await query.ToListAsync();
 
                 return _mapper.Map<List<AssetPair>>(entities);
             }

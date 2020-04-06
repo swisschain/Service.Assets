@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
@@ -30,54 +31,24 @@ namespace Assets.WebApi
         [HttpGet]
         [ProducesResponseType(typeof(AssetRequestMany), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetManyAsync([FromQuery] AssetRequestMany assetRequestMany)
+        public async Task<IActionResult> GetManyAsync([FromQuery] AssetRequestMany request)
         {
-            if (assetRequestMany.Limit > 1000)
+            if (request.Limit > 1000)
             {
-                ModelState.AddModelError($"{nameof(assetRequestMany.Limit)}", "Should not be more than 1000");
+                ModelState.AddModelError($"{nameof(request.Limit)}", "Should not be more than 1000");
 
                 return BadRequest(ModelState);
             }
 
-            var take = assetRequestMany.Limit;
-            var cursor = assetRequestMany.Cursor;
-            var sortOrder = assetRequestMany.Order == PaginationOrder.Asc;
-            var idFilter = assetRequestMany.AssetId;
-            var nameFilter = assetRequestMany.Name;
+            var sortOrder = request.Order == PaginationOrder.Asc
+                ? ListSortDirection.Ascending
+                : ListSortDirection.Descending;
 
-            var assets = await _assetsService.GetAllAsync();
+            var assets = await _assetsService.GetAllAsync(request.Name, request.AssetId, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
-            var query = assets.AsQueryable();
+            var result = _mapper.Map<List<Asset>>(assets);
 
-            if(!string.IsNullOrEmpty(idFilter))
-                query = query.Where(asset => asset.Id.Contains(idFilter, StringComparison.InvariantCultureIgnoreCase));
-
-            if (!string.IsNullOrEmpty(nameFilter))
-                query = query.Where(asset => asset.Name.Contains(nameFilter, StringComparison.InvariantCultureIgnoreCase));
-
-            query = query.Where(asset => asset.IsDisabled == assetRequestMany.IsDisabled);
-
-            if (sortOrder)
-            {
-                if (cursor != null)
-                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) >= 0);
-
-                query = query
-                    .OrderBy(x => x.Id);
-            }
-            else
-            {
-                if (cursor != null)
-                    query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) < 0);
-
-                query = query.OrderByDescending(x => x.Id);
-            }
-
-            query = query.Take(take);
-
-            var model = _mapper.Map<List<Asset>>(query.ToList());
-
-            return Ok(model.Paginate(assetRequestMany, Url, x => x.Id));
+            return Ok(result.Paginate(request, Url, x => x.Id));
         }
 
         [HttpGet("{assetId}")]
