@@ -76,6 +76,18 @@ namespace Assets.Repositories.Migrations
                 schema: "assets",
                 table: "asset_pairs",
                 column: "quoting_asset_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_asset_pairs_is_disabled",
+                schema: "assets",
+                table: "asset_pairs",
+                column: "is_disabled");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_assets_is_disabled",
+                schema: "assets",
+                table: "assets",
+                column: "is_disabled");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
