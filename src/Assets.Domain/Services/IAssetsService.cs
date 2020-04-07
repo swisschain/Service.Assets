@@ -18,7 +18,7 @@ namespace Assets.Domain.Services
 
         Task<Asset> AddAsync(string brokerId, string name, string description, int accuracy, bool isDisabled);
 
-        Task<bool> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled);
+        Task<Asset> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled);
 
         Task<bool> DeleteAsync(string assetId);
     }

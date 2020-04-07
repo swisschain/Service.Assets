@@ -66,21 +66,21 @@ namespace Assets.Services
                 Modified = date
             };
 
-            await _assetPairsRepository.InsertAsync(assetPair);
+            var result = await _assetPairsRepository.InsertAsync(assetPair);
 
             _logger.LogInformation("Asset pair added. {$AssetPair}", assetPair);
 
-            return assetPair;
+            return result;
         }
 
-        public async Task<bool> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
+        public async Task<AssetPair> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
             var assetPair = await _assetPairsRepository.GetByIdAsync(assetPairId);
 
             if (assetPair == null)
-                return false;
+                return null;
 
             assetPair.Name = name;
             assetPair.BaseAssetId = baseAssetId;
@@ -93,11 +93,11 @@ namespace Assets.Services
             assetPair.IsDisabled = isDisabled;
             assetPair.Modified = DateTime.UtcNow;
 
-            await _assetPairsRepository.UpdateAsync(assetPair);
+            var result = await _assetPairsRepository.UpdateAsync(assetPair);
 
             _logger.LogInformation("Asset pair updated. {$AssetPair}", assetPair);
 
-            return true;
+            return result;
         }
 
         public async Task<bool> DeleteAsync(string assetPairId)

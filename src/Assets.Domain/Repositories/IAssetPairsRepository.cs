@@ -16,9 +16,9 @@ namespace Assets.Domain.Repositories
 
         Task<AssetPair> GetByIdAsync(string assetPairId);
 
-        Task InsertAsync(AssetPair assetPair);
+        Task<AssetPair> InsertAsync(AssetPair assetPair);
 
-        Task UpdateAsync(AssetPair assetPair);
+        Task<AssetPair> UpdateAsync(AssetPair assetPair);
 
         Task DeleteAsync(string assetPairId);
     }

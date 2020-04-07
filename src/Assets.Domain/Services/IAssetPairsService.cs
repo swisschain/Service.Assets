@@ -20,7 +20,7 @@ namespace Assets.Domain.Services
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 
-        Task<bool> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
+        Task<AssetPair> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 

@@ -100,7 +100,7 @@ namespace Assets.Repositories
             }
         }
 
-        public async Task InsertAsync(Asset asset)
+        public async Task<Asset> InsertAsync(Asset asset)
         {
             asset.Created = DateTime.UtcNow;
 
@@ -111,10 +111,12 @@ namespace Assets.Repositories
                 context.Assets.Add(entity);
 
                 await context.SaveChangesAsync();
+
+                return _mapper.Map<Asset>(entity);
             }
         }
 
-        public async Task UpdateAsync(Asset asset)
+        public async Task<Asset> UpdateAsync(Asset asset)
         {
             asset.Modified = DateTime.UtcNow;
 
@@ -126,6 +128,8 @@ namespace Assets.Repositories
                 _mapper.Map(asset, entity);
 
                 await context.SaveChangesAsync();
+
+                return _mapper.Map<Asset>(entity);
             }
         }
 

@@ -92,7 +92,7 @@ namespace Assets.WebApi
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 
-            if (!found)
+            if (found == null)
                 return NotFound();
 
             var updatedModel = await _assetPairsService.GetByIdAsync(model.Id);

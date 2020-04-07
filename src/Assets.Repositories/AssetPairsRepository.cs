@@ -105,7 +105,7 @@ namespace Assets.Repositories
             }
         }
 
-        public async Task InsertAsync(AssetPair assetPair)
+        public async Task<AssetPair> InsertAsync(AssetPair assetPair)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
@@ -114,10 +114,12 @@ namespace Assets.Repositories
                 context.AssetPairs.Add(entity);
 
                 await context.SaveChangesAsync();
+
+                return _mapper.Map<AssetPair>(entity);
             }
         }
 
-        public async Task UpdateAsync(AssetPair assetPair)
+        public async Task<AssetPair> UpdateAsync(AssetPair assetPair)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
@@ -127,6 +129,8 @@ namespace Assets.Repositories
                 _mapper.Map(assetPair, entity);
 
                 await context.SaveChangesAsync();
+
+                return _mapper.Map<AssetPair>(entity);
             }
         }
 

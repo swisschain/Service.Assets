@@ -87,7 +87,7 @@ namespace Assets.WebApi
         {
             var found = await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
-            if (!found)
+            if (found == null)
                 return NotFound();
 
             var updatedModel = _assetsService.GetByIdAsync(model.Id);

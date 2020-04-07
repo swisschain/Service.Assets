@@ -67,12 +67,12 @@ namespace Assets.Services
             return asset;
         }
 
-        public async Task<bool> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled)
+        public async Task<Asset> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled)
         {
             var asset = await _assetsRepository.GetByIdAsync(assetId);
 
             if (asset == null)
-                return false;
+                return null;
 
             asset.Name = name;
             asset.Description = description;
@@ -80,11 +80,11 @@ namespace Assets.Services
             asset.IsDisabled = isDisabled;
             asset.Modified = DateTime.UtcNow;
 
-            await _assetsRepository.UpdateAsync(asset);
+            var result = await _assetsRepository.UpdateAsync(asset);
 
             _logger.LogInformation("Asset updated. {$Asset}", asset);
 
-            return true;
+            return result;
         }
 
         public async Task<bool> DeleteAsync(string assetId)
