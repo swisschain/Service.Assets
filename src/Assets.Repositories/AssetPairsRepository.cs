@@ -27,7 +27,7 @@ namespace Assets.Repositories
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
-                var entities = await context.Assets
+                var entities = await context.AssetPairs
                     .ToListAsync();
 
                 return _mapper.Map<List<AssetPair>>(entities);
