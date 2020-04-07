@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
@@ -44,7 +43,9 @@ namespace Assets.WebApi
                 ? ListSortDirection.Ascending
                 : ListSortDirection.Descending;
 
-            var assets = await _assetsService.GetAllAsync(request.Name, request.AssetId, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
+            var brokerId = User.GetTenantId();
+
+            var assets = await _assetsService.GetAllAsync(brokerId, request.AssetId, request.Name, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
             var result = _mapper.Map<List<Asset>>(assets);
 

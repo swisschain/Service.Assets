@@ -9,9 +9,11 @@ namespace Assets.Domain.Services
     {
         Task<IReadOnlyList<AssetPair>> GetAllAsync();
 
+        Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId);
+
         Task<AssetPair> GetByIdAsync(string assetPairId);
 
-        Task<IReadOnlyList<AssetPair>> GetAllAsync(string name, string assetId, string baseAssetId, string quoteAssetId,
+        Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId,
             bool isDisabled = false, ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
         Task<AssetPair> AddAsync(string brokerId, string name, string baseAssetId, string quotingAssetId,

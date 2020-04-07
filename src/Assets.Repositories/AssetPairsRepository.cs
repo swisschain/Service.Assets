@@ -27,19 +27,35 @@ namespace Assets.Repositories
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
-                var entities = await context.AssetPairs
+                var entities = await context.Assets
                     .ToListAsync();
 
                 return _mapper.Map<List<AssetPair>>(entities);
             }
         }
 
-        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(string name, string assetPairId, string baseAssetId, string quoteAssetId,
+        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId)
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                IQueryable<AssetEntity> query = context.Assets;
+
+                query = query.Where(x => string.Equals(x.BrokerId, brokerId, StringComparison.InvariantCultureIgnoreCase));
+
+                var entities = await query.ToListAsync();
+
+                return _mapper.Map<List<AssetPair>>(entities);
+            }
+        }
+
+        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId,
             bool isDisabled = false, ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
                 IQueryable<AssetPairEntity> query = context.AssetPairs;
+
+                query = query.Where(x => string.Equals(x.BrokerId, brokerId, StringComparison.InvariantCultureIgnoreCase));
 
                 if (!string.IsNullOrEmpty(assetPairId))
                     query = query.Where(assetPair => assetPair.Id.Contains(assetPairId, StringComparison.InvariantCultureIgnoreCase));
