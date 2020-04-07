@@ -40,7 +40,7 @@ namespace Assets.Repositories
             {
                 IQueryable<AssetEntity> query = context.Assets;
 
-                query = query.Where(x => string.Equals(x.BrokerId, brokerId, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper());
 
                 var entities = await query.ToListAsync();
 
@@ -55,7 +55,7 @@ namespace Assets.Repositories
             {
                 IQueryable<AssetPairEntity> query = context.AssetPairs;
 
-                query = query.Where(x => string.Equals(x.BrokerId, brokerId, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper());
 
                 if (!string.IsNullOrEmpty(assetPairId))
                     query = query.Where(assetPair => assetPair.Id.Contains(assetPairId, StringComparison.InvariantCultureIgnoreCase));
