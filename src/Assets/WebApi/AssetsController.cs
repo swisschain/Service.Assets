@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Assets.Domain.Services;
 using Assets.WebApi.Models.Assets;
 using Assets.WebApi.Models.Common;
-using Assets.WebApi.Models.Pagination;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swisschain.Sdk.Server.Authorization;
+using Swisschain.Sdk.Server.WebApi.Pagination;
 
 namespace Assets.WebApi
 {

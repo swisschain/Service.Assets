@@ -16,7 +16,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
-    <PackageReference Include="Swisschain.Sdk.Server" Version="2.5.0" />
+    <PackageReference Include="Swisschain.Sdk.Server" Version="5.0.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
   </ItemGroup>
 
@@ -36,10 +36,6 @@
     <Protobuf Include="..\..\.protos\assets.proto" Link="Protos\assets.proto" />
     <Protobuf Include="..\..\.protos\asset-pairs.proto" Link="Protos\asset-pairs.proto" />
     <Protobuf Include="..\..\.protos\isalive.proto" Link="Protos\isalive.proto" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="WebApi\Models\Pagination\" />
   </ItemGroup>
 
 </Project>

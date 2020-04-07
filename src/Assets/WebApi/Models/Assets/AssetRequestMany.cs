@@ -1,6 +1,8 @@
-﻿namespace Assets.WebApi.Models.Assets
+﻿using Swisschain.Sdk.Server.WebApi.Pagination;
+
+namespace Assets.WebApi.Models.Assets
 {
-    public class AssetRequestMany : Pagination.PaginationRequest<string>
+    public class AssetRequestMany : PaginationRequest<string>
     {
         public string Name { get; set; }
 
