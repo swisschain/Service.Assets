@@ -1,15 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
-using Assets.Client.Models.AssetPairs;
 using Assets.Domain.Services;
+using Assets.WebApi.Models.AssetPairs;
+using Assets.WebApi.Models.Common;
+using Assets.WebApi.Models.Pagination;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swisschain.Sdk.Server.Authorization;
 
 namespace Assets.WebApi
 {
+    [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/asset-pairs")]
     public class AssetPairsController : ControllerBase
     {
         private readonly IAssetPairsService _assetPairsService;
@@ -22,55 +29,91 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [ProducesResponseType(typeof(AssetPairRequestMany), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany request)
         {
-            var assetPairs = await _assetPairsService.GetAllAsync();
+            if (request.Limit > 1000)
+            {
+                ModelState.AddModelError($"{nameof(request.Limit)}", "Should not be more than 1000");
 
-            var model = _mapper.Map<List<AssetPairModel>>(assetPairs);
+                return BadRequest(ModelState);
+            }
 
-            return Ok(model);
+            var sortOrder = request.Order == PaginationOrder.Asc
+                ? ListSortDirection.Ascending
+                : ListSortDirection.Descending;
+
+            var assetPairs = await _assetPairsService.GetAllAsync(request.Name, request.AssetPairId, request.BaseAssetId, request.QuoteAssetId,
+                request.IsDisabled, sortOrder, request.Cursor, request.Limit);
+
+            var result = _mapper.Map<List<AssetPair>>(assetPairs);
+
+            return Ok(result.Paginate(request, Url, x => x.Id));
         }
 
         [HttpGet("{assetPairId}")]
+        [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(string assetPairId)
         {
             var assetPair = await _assetPairsService.GetByIdAsync(assetPairId);
 
-            var model = _mapper.Map<AssetPairModel>(assetPair);
+            if (assetPair == null)
+                return NotFound();
+
+            var model = _mapper.Map<AssetPair>(assetPair);
 
             return Ok(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AssetPairEditModel model)
+        [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
         {
+            model.Id = Guid.NewGuid().ToString();
+
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetPairsService.AddAsync(model.Id, brokerId, model.Name, model.BaseAssetId, model.QuotingAssetId,
-                model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+            var asset = await _assetPairsService.AddAsync(model.Id, brokerId, model.Name, model.BaseAssetId,
+                model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 
-            var newModel = _mapper.Map<AssetPairModel>(asset);
+            var newModel = _mapper.Map<AssetPair>(asset);
 
             return Ok(newModel);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEditModel model)
+        [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
         {
-            await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId, model.QuotingAssetId,
-                model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+            var found = await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
+                model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 
-            return NoContent();
+            if (!found)
+                return NotFound();
+
+            var updatedModel = await _assetPairsService.GetByIdAsync(model.Id);
+
+            var newModel = _mapper.Map<AssetPair>(updatedModel);
+
+            return Ok(newModel);
         }
 
         [HttpDelete("{assetPairId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string assetPairId)
         {
-            await _assetPairsService.DeleteAsync(assetPairId);
+            var found = await _assetPairsService.DeleteAsync(assetPairId);
 
-            return NoContent();
+            if (!found)
+                return NotFound();
+
+            return Ok();
         }
     }
 }
