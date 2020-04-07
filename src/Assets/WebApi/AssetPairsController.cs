@@ -71,11 +71,9 @@ namespace Assets.WebApi
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
         {
-            model.Id = Guid.NewGuid().ToString();
-
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetPairsService.AddAsync(model.Id, brokerId, model.Name, model.BaseAssetId,
+            var asset = await _assetPairsService.AddAsync(brokerId, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 

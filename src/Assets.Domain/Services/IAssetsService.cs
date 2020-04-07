@@ -14,7 +14,7 @@ namespace Assets.Domain.Services
         Task<IReadOnlyList<Asset>> GetAllAsync(string name, string assetId, bool isDisabled = false,
             ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
-        Task<Asset> AddAsync(string assetId, string brokerId, string name, string description, int accuracy, bool isDisabled);
+        Task<Asset> AddAsync(string brokerId, string name, string description, int accuracy, bool isDisabled);
 
         Task<bool> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled);
 

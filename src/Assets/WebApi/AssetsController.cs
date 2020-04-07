@@ -70,11 +70,9 @@ namespace Assets.WebApi
         [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
         public async Task<IActionResult> AddAsync([FromBody] AssetEdit model)
         {
-            model.Id = Guid.NewGuid().ToString();
-
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetsService.AddAsync(model.Id, brokerId, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            var asset = await _assetsService.AddAsync(brokerId, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
             var newModel = _mapper.Map<Asset>(asset);
 

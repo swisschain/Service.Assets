@@ -36,9 +36,11 @@ namespace Assets.Services
             return _assetsRepository.GetByIdAsync(assetId);
         }
 
-        public async Task<Asset> AddAsync(string assetId, string brokerId, string name, string description, int accuracy,
+        public async Task<Asset> AddAsync(string brokerId, string name, string description, int accuracy,
             bool isDisabled)
         {
+            var assetId = Guid.NewGuid().ToString();
+
             var date = DateTime.UtcNow;
 
             var asset = new Asset

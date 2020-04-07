@@ -36,10 +36,12 @@ namespace Assets.Services
             return _assetPairsRepository.GetByIdAsync(assetPairId);
         }
 
-        public async Task<AssetPair> AddAsync(string assetPairId, string brokerId, string name, string baseAssetId,
+        public async Task<AssetPair> AddAsync(string brokerId, string name, string baseAssetId,
             string quotingAssetId, int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
+            var assetPairId = Guid.NewGuid().ToString();
+
             var date = DateTime.UtcNow;
 
             var assetPair = new AssetPair
