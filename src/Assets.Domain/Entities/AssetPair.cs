@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Assets.Domain.Entities
 {
@@ -11,6 +11,11 @@ namespace Assets.Domain.Entities
         /// The unique identifier.
         /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// Broker identifier.
+        /// </summary>
+        public string BrokerId { get; set; }
 
         /// <summary>
         /// The human-readable name.

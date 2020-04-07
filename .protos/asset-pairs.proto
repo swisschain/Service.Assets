@@ -38,6 +38,7 @@ message AddAssetPairRequest {
     string maxOppositeVolume = 8;
     string marketOrderPriceThreshold = 9;
     bool is_disabled = 10;
+    string broker_id = 11;
 }
 
 message AddAssetPairResponse {
@@ -74,4 +75,5 @@ message AssetPair {
     bool is_disabled = 10;
     google.protobuf.Timestamp created = 11;
     google.protobuf.Timestamp modified = 12;
+    string broker_id = 13;
 }

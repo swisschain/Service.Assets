@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Service.Assets.Contracts;
 
 namespace Assets.Client.Models.AssetPairs
@@ -18,6 +18,7 @@ namespace Assets.Client.Models.AssetPairs
         internal AssetPairModel(AssetPair assetPair)
         {
             Id = assetPair.Id;
+            BrokerId = BrokerId;
             Name = assetPair.Name;
             BaseAssetId = assetPair.BaseAssetId;
             QuotingAssetId = assetPair.QuotingAssetId;
@@ -35,6 +36,11 @@ namespace Assets.Client.Models.AssetPairs
         /// The unique identifier.
         /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// Broker identifier.
+        /// </summary>
+        public string BrokerId { get; set; }
 
         /// <summary>
         /// The human-readable name.

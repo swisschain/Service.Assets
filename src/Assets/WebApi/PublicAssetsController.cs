@@ -11,6 +11,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swisschain.Sdk.Server.Authorization;
 
 namespace Assets.WebApi
 {
@@ -72,7 +73,9 @@ namespace Assets.WebApi
         {
             model.Id = Guid.NewGuid().ToString();
 
-            var asset = await _assetsService.AddAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            var brokerId = User.GetTenantId();
+
+            var asset = await _assetsService.AddAsync(model.Id, brokerId, model.Name, model.Description, model.Accuracy, model.IsDisabled);
 
             var newModel = _mapper.Map<Asset>(asset);
 

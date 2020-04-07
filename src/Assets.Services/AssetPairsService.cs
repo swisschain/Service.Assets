@@ -36,7 +36,7 @@ namespace Assets.Services
             return _assetPairsRepository.GetByIdAsync(assetPairId);
         }
 
-        public async Task<AssetPair> AddAsync(string assetPairId, string name, string baseAssetId,
+        public async Task<AssetPair> AddAsync(string assetPairId, string brokerId, string name, string baseAssetId,
             string quotingAssetId, int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
@@ -45,6 +45,7 @@ namespace Assets.Services
             var assetPair = new AssetPair
             {
                 Id = assetPairId,
+                BrokerId = brokerId,
                 Name = name,
                 BaseAssetId = baseAssetId,
                 QuotingAssetId = quotingAssetId,

@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swisschain.Sdk.Server.Authorization;
 
 namespace Assets.WebApi
 {
@@ -71,7 +72,10 @@ namespace Assets.WebApi
         public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
         {
             model.Id = Guid.NewGuid().ToString();
-            var asset = await _assetPairsService.AddAsync(model.Id, model.Name, model.BaseAssetId,
+
+            var brokerId = User.GetTenantId();
+
+            var asset = await _assetPairsService.AddAsync(model.Id, brokerId, model.Name, model.BaseAssetId,
                 model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                 model.MarketOrderPriceThreshold, model.IsDisabled);
 

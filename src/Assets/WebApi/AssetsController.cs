@@ -1,9 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.Client.Models.Assets;
 using Assets.Domain.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Swisschain.Sdk.Server.Authorization;
 
 namespace Assets.WebApi
 {
@@ -43,7 +44,9 @@ namespace Assets.WebApi
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] AssetEditModel model)
         {
-            var asset = await _assetsService.AddAsync(model.Id, model.Name, model.Description, model.Accuracy,
+            var brokerId = User.GetTenantId();
+
+            var asset = await _assetsService.AddAsync(model.Id, brokerId, model.Name, model.Description, model.Accuracy,
                 model.IsDisabled);
 
             var newModel = _mapper.Map<AssetModel>(asset);

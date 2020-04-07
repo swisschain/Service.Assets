@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Service.Assets.Contracts;
 
 namespace Assets.Client.Models.Assets
@@ -18,6 +18,7 @@ namespace Assets.Client.Models.Assets
         internal AssetModel(Asset asset)
         {
             Id = asset.Id;
+            BrokerId = BrokerId;
             Name = asset.Name;
             Description = asset.Description;
             Accuracy = asset.Accuracy;
@@ -30,6 +31,11 @@ namespace Assets.Client.Models.Assets
         /// The unique identifier.
         /// </summary>
         public string Id { get; set; }
+
+        /// <summary>
+        /// Broker identifier.
+        /// </summary>
+        public string BrokerId { get; set; }
 
         /// <summary>
         /// The human-readable name.

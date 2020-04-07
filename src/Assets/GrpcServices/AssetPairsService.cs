@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
 using AutoMapper;
@@ -40,7 +40,7 @@ namespace Assets.GrpcServices
 
         public override async Task<AddAssetPairResponse> Add(AddAssetPairRequest request, ServerCallContext context)
         {
-            var assetPair = await _assetPairsService.AddAsync(request.Id, request.Name, request.BaseAssetId,
+            var assetPair = await _assetPairsService.AddAsync(request.Id, request.BrokerId, request.Name, request.BaseAssetId,
                 request.QuotingAssetId, request.Accuracy, decimal.Parse(request.MinVolume),
                 decimal.Parse(request.MaxVolume), decimal.Parse(request.MaxOppositeVolume),
                 decimal.Parse(request.MarketOrderPriceThreshold), request.IsDisabled);

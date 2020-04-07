@@ -39,7 +39,7 @@ namespace Assets.GrpcServices
 
         public override async Task<AddAssetResponse> Add(AddAssetRequest request, ServerCallContext context)
         {
-            var asset = await _assetsService.AddAsync(request.Id, request.Name, request.Description, request.Accuracy,
+            var asset = await _assetsService.AddAsync(request.Id, request.BrokerId, request.Name, request.Description, request.Accuracy,
                 request.IsDisabled);
 
             return new AddAssetResponse {Asset = _mapper.Map<Asset>(asset)};

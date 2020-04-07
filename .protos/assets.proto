@@ -33,6 +33,7 @@ message AddAssetRequest {
     string description = 3;
     int32 accuracy = 4;
     bool is_disabled = 5;
+    string broker_id = 6;
 }
 
 message AddAssetResponse {
@@ -59,4 +60,5 @@ message Asset {
     bool is_disabled = 5;
     google.protobuf.Timestamp created = 6;
     google.protobuf.Timestamp modified = 7;
+    string broker_id = 8;
 }
