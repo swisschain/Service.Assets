@@ -28,7 +28,7 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(AssetPairRequestMany), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Paginated<AssetPair, string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany request)
         {

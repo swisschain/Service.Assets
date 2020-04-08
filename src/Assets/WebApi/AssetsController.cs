@@ -28,7 +28,7 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(AssetRequestMany), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Paginated<Asset, string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetManyAsync([FromQuery] AssetRequestMany request)
         {
@@ -81,7 +81,7 @@ namespace Assets.WebApi
         }
 
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetEdit model)
         {
