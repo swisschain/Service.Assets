@@ -49,7 +49,7 @@ namespace Assets.Repositories
             }
         }
 
-        public async Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string assetId, string name, bool isDisabled = false,
+        public async Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string assetId, string name, bool? isDisabled,
             ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             using (var context = _connectionFactory.CreateDataContext())
@@ -64,7 +64,8 @@ namespace Assets.Repositories
                 if (!string.IsNullOrEmpty(name))
                     query = query.Where(x => x.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
 
-                query = query.Where(x => x.IsDisabled == isDisabled);
+                if (isDisabled.HasValue)
+                    query = query.Where(x => x.IsDisabled == isDisabled);
 
                 if (sortOrder == ListSortDirection.Ascending)
                 {

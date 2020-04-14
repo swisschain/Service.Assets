@@ -8,6 +8,6 @@ namespace Assets.WebApi.Models.Assets
 
         public string AssetId { get; set; }
 
-        public bool IsDisabled { get; set; }
+        public bool? IsDisabled { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Assets.Domain.Services
 
         Task<Asset> GetByIdAsync(string assetId);
 
-        Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string assetId, string name, bool isDisabled = false,
+        Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string assetId, string name, bool? isDisabled,
             ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
         Task<Asset> AddAsync(string brokerId, string name, string description, int accuracy, bool isDisabled);
