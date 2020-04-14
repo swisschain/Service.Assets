@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Assets.Client.Models.Assets;
 
 namespace Assets.Client.Api
@@ -10,35 +9,23 @@ namespace Assets.Client.Api
     public interface IAssetsApi
     {
         /// <summary>
-        /// Returns all assets.
-        /// </summary>
-        /// <returns>A collection of assets.</returns>
-        Task<IReadOnlyList<AssetModel>> GetAllAsync();
-
-        /// <summary>
         /// Returns an asset by identifier.
         /// </summary>
-        /// <param name="assetId">The asset identifier.</param>
-        /// <returns>The asset.</returns>
-        Task<AssetModel> GetByIdAsync(string assetId);
+        Task<AssetModel> GetByIdAsync(string brokerId, string id);
 
         /// <summary>
         /// Creates asset.
         /// </summary>
-        /// <param name="model">The asset.</param>
-        /// <returns>Created asset.</returns>
         Task<AssetModel> AddAsync(AssetEditModel model);
 
         /// <summary>
         /// Updates asset.
         /// </summary>
-        /// <param name="model">The asset.</param>
         Task UpdateAsync(AssetEditModel model);
 
         /// <summary>
         /// Deletes asset by identifier.
         /// </summary>
-        /// <param name="assetId">The asset identifier.</param>
-        Task DeleteAsync(string assetId);
+        Task DeleteAsync(string brokerId, string id);
     }
 }

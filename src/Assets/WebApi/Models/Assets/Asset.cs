@@ -13,11 +13,6 @@ namespace Assets.WebApi.Models.Assets
         public string Id { get; set; }
 
         /// <summary>
-        /// Broker identifier.
-        /// </summary>
-        public string BrokerId { get; set; }
-
-        /// <summary>
         /// The human-readable name.
         /// </summary>
         public string Name { get; set; }

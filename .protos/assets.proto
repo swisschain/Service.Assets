@@ -20,7 +20,8 @@ message GetAllAssetsResponse {
 }
 
 message GetAssetByIdRequest {
-    string assetId = 1;
+    string id = 1;
+    string broker_id = 2;
 }
 
 message GetAssetByIdResponse {
@@ -46,10 +47,12 @@ message UpdateAssetRequest {
     string description = 3;
     int32 accuracy = 4;
     bool is_disabled = 5;
+    string broker_id = 6;
 }
 
 message DeleteAssetRequest {
-    string assetId = 1;
+    string id = 1;
+    string broker_id = 2;
 }
 
 message Asset {

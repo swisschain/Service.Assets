@@ -15,6 +15,7 @@ namespace Assets.Repositories.Migrations
                 schema: "assets",
                 columns: table => new
                 {
+                    broker_id = table.Column<string>(type: "varchar(36)", nullable: false),
                     id = table.Column<string>(type: "varchar(36)", nullable: false),
                     name = table.Column<string>(type: "varchar(100)", nullable: false),
                     description = table.Column<string>(type: "varchar(500)", nullable: true),
@@ -25,7 +26,10 @@ namespace Assets.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_assets", x => x.id);
+                    table.PrimaryKey(
+                        name: "PK_assets",
+                        columns: t => new { t.broker_id, t.id }
+                    );
                 });
 
             migrationBuilder.CreateTable(
@@ -33,6 +37,7 @@ namespace Assets.Repositories.Migrations
                 schema: "assets",
                 columns: table => new
                 {
+                    broker_id = table.Column<string>(type: "varchar(36)", nullable: false),
                     id = table.Column<string>(type: "varchar(36)", nullable: false),
                     name = table.Column<string>(type: "varchar(100)", nullable: false),
                     base_asset_id = table.Column<string>(type: "varchar(36)", nullable: false),
@@ -48,7 +53,10 @@ namespace Assets.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_asset_pairs", x => x.id);
+                    table.PrimaryKey(
+                        name: "PK_asset_pairs",
+                        columns: t => new { t.broker_id, t.id }
+                    );
                     table.ForeignKey(
                         name: "FK_asset_pairs_assets_base_asset_id",
                         column: x => x.base_asset_id,
@@ -100,6 +108,18 @@ namespace Assets.Repositories.Migrations
                 schema: "assets",
                 table: "assets",
                 column: "name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_asset_pairs_broker_id",
+                schema: "assets",
+                table: "asset_pairs",
+                column: "broker_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_assets_broker_id",
+                schema: "assets",
+                table: "assets",
+                column: "broker_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

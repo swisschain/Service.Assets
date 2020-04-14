@@ -12,10 +12,29 @@ namespace Assets
     {
         public AutoMapperProfile()
         {
+            Client();
+
+            WebApi();
+
+            Contract();
+        }
+
+        private void Client()
+        {
             CreateMap<Asset, AssetModel>(MemberList.Source);
 
             CreateMap<AssetPair, AssetPairModel>(MemberList.Source);
+        }
 
+        private void WebApi()
+        {
+            CreateMap<Asset, WebApi.Models.Assets.Asset>(MemberList.Destination);
+
+            CreateMap<AssetPair, WebApi.Models.AssetPairs.AssetPair>(MemberList.Destination);
+        }
+
+        private void Contract()
+        {
             CreateMap<Asset, Service.Assets.Contracts.Asset>(MemberList.Destination)
                 .ForMember(dest => dest.Created, opt => opt.MapFrom(src => Convert(src.Created)))
                 .ForMember(dest => dest.Modified, opt => opt.MapFrom(src => Convert(src.Modified)));
@@ -31,14 +50,6 @@ namespace Assets
                     opt => opt.MapFrom(src => src.MarketOrderPriceThreshold.ToString(CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.Created, opt => opt.MapFrom(src => Convert(src.Created)))
                 .ForMember(dest => dest.Modified, opt => opt.MapFrom(src => Convert(src.Modified)));
-
-            CreateMap<Asset, WebApi.Models.Assets.Asset>(MemberList.Destination);
-
-            CreateMap<WebApi.Models.Assets.Asset, Asset>(MemberList.Destination);
-
-            CreateMap<AssetPair, WebApi.Models.AssetPairs.AssetPair>(MemberList.Destination);
-
-            CreateMap<WebApi.Models.AssetPairs.AssetPair, AssetPair>(MemberList.Destination);
         }
 
         private static Timestamp Convert(DateTime dateTime)

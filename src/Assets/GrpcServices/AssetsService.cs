@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Assets.Domain.Services;
 using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
@@ -19,35 +18,24 @@ namespace Assets.GrpcServices
             _mapper = mapper;
         }
 
-        public override async Task<GetAllAssetsResponse> GetAll(Empty request, ServerCallContext context)
-        {
-            var assets = await _assetsService.GetAllAsync();
-
-            var response = new GetAllAssetsResponse();
-
-            response.Assets.AddRange(_mapper.Map<List<Asset>>(assets));
-
-            return response;
-        }
-
         public override async Task<GetAssetByIdResponse> GetById(GetAssetByIdRequest request, ServerCallContext context)
         {
-            var asset = await _assetsService.GetByIdAsync(request.AssetId);
+            var asset = await _assetsService.GetByIdAsync(request.BrokerId, request.Id);
 
             return new GetAssetByIdResponse {Asset = _mapper.Map<Asset>(asset)};
         }
 
         public override async Task<AddAssetResponse> Add(AddAssetRequest request, ServerCallContext context)
         {
-            var asset = await _assetsService.AddAsync(request.BrokerId, request.Name, request.Description, request.Accuracy,
-                request.IsDisabled);
+            var asset = await _assetsService.AddAsync(
+                request.BrokerId, request.Id, request.Name, request.Description, request.Accuracy, request.IsDisabled);
 
             return new AddAssetResponse {Asset = _mapper.Map<Asset>(asset)};
         }
 
         public override async Task<Empty> Update(UpdateAssetRequest request, ServerCallContext context)
         {
-            await _assetsService.UpdateAsync(request.Id, request.Name, request.Description, request.Accuracy,
+            await _assetsService.UpdateAsync(request.BrokerId, request.Id, request.Name, request.Description, request.Accuracy,
                 request.IsDisabled);
 
             return new Empty();
@@ -55,7 +43,7 @@ namespace Assets.GrpcServices
 
         public override async Task<Empty> Delete(DeleteAssetRequest request, ServerCallContext context)
         {
-            await _assetsService.DeleteAsync(request.AssetId);
+            await _assetsService.DeleteAsync(request.BrokerId, request.Id);
 
             return new Empty();
         }

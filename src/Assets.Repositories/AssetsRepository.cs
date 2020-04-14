@@ -23,18 +23,6 @@ namespace Assets.Repositories
             _mapper = mapper;
         }
 
-
-        public async Task<IReadOnlyList<Asset>> GetAllAsync()
-        {
-            using (var context = _connectionFactory.CreateDataContext())
-            {
-                var entities = await context.Assets
-                    .ToListAsync();
-
-                return _mapper.Map<List<Asset>>(entities);
-            }
-        }
-
         public async Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId)
         {
             using (var context = _connectionFactory.CreateDataContext())
@@ -49,7 +37,7 @@ namespace Assets.Repositories
             }
         }
 
-        public async Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string assetId, string name, bool? isDisabled,
+        public async Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string id, string name, bool? isDisabled,
             ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             using (var context = _connectionFactory.CreateDataContext())
@@ -58,11 +46,11 @@ namespace Assets.Repositories
 
                 query = query.Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper());
 
-                if (!string.IsNullOrEmpty(assetId))
-                    query = query.Where(x => x.Id.Contains(assetId, StringComparison.InvariantCultureIgnoreCase));
+                if (!string.IsNullOrEmpty(id))
+                    query = query.Where(x => EF.Functions.ILike(x.Id, $"%{id}%"));
 
                 if (!string.IsNullOrEmpty(name))
-                    query = query.Where(x => x.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
+                    query = query.Where(x => EF.Functions.ILike(x.Name, $"%{name}%"));
 
                 if (isDisabled.HasValue)
                     query = query.Where(x => x.IsDisabled == isDisabled);
@@ -70,14 +58,14 @@ namespace Assets.Repositories
                 if (sortOrder == ListSortDirection.Ascending)
                 {
                     if (cursor != null)
-                        query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) >= 0);
+                        query = query.Where(x => x.Id.CompareTo(cursor) >= 0);
 
                     query = query.OrderBy(x => x.Id);
                 }
                 else
                 {
                     if (cursor != null)
-                        query = query.Where(x => String.Compare(x.Id, cursor, StringComparison.CurrentCultureIgnoreCase) < 0);
+                        query = query.Where(x => x.Id.CompareTo(cursor) < 0);
 
                     query = query.OrderByDescending(x => x.Id);
                 }
@@ -90,14 +78,13 @@ namespace Assets.Repositories
             }
         }
 
-        public async Task<Asset> GetByIdAsync(string assetId)
+        public async Task<Asset> GetByIdAsync(string brokerId, string id)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
-                var entity = await context.Assets
-                    .FindAsync(assetId);
+                var existed = await GetAsync(brokerId, id, context);
 
-                return _mapper.Map<Asset>(entity);
+                return _mapper.Map<Asset>(existed);
             }
         }
 
@@ -107,6 +94,11 @@ namespace Assets.Repositories
 
             using (var context = _connectionFactory.CreateDataContext())
             {
+                var existed = await GetAsync(asset.BrokerId, asset.Id, context);
+
+                if (existed != null)
+                    throw new InvalidOperationException($"An asset with the same identifier '{asset.Id}' already exists.");
+
                 var entity = _mapper.Map<AssetEntity>(asset);
 
                 context.Assets.Add(entity);
@@ -123,27 +115,44 @@ namespace Assets.Repositories
 
             using (var context = _connectionFactory.CreateDataContext())
             {
-                var entity = await context.Assets
-                    .FindAsync(asset.Id);
+                var existed = await GetAsync(asset.BrokerId, asset.Id, context);
 
-                _mapper.Map(asset, entity);
+                if (existed == null)
+                    throw new InvalidOperationException($"An asset with the identifier '{asset.Id}' not exists.");
+
+                _mapper.Map(asset, existed);
 
                 await context.SaveChangesAsync();
 
-                return _mapper.Map<Asset>(entity);
+                return _mapper.Map<Asset>(existed);
             }
         }
 
-        public async Task DeleteAsync(string assetId)
+        public async Task DeleteAsync(string brokerId, string id)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
-                var entity = new AssetEntity {Id = assetId};
+                var existed = await GetAsync(brokerId, id, context);
 
-                context.Entry(entity).State = EntityState.Deleted;
+                if (existed == null)
+                    throw new InvalidOperationException($"An asset with the identifier '{id}' not exists.");
+
+                context.Entry(existed).State = EntityState.Deleted;
 
                 await context.SaveChangesAsync();
             }
+        }
+
+        private async Task<AssetEntity> GetAsync(string brokerId, string id, DataContext context)
+        {
+            IQueryable<AssetEntity> query = context.Assets;
+
+            var existed = await query
+                .Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper())
+                .Where(x => x.Id == id)
+                .SingleOrDefaultAsync();
+
+            return existed;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
@@ -45,19 +46,21 @@ namespace Assets.WebApi
 
             var brokerId = User.GetTenantId();
 
-            var assets = await _assetsService.GetAllAsync(brokerId, request.AssetId, request.Name, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
+            var assets = await _assetsService.GetAllAsync(brokerId, request.Id, request.Name, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
             var result = _mapper.Map<List<Asset>>(assets);
 
             return Ok(result.Paginate(request, Url, x => x.Id));
         }
 
-        [HttpGet("{assetId}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByIdAsync(string assetId)
+        public async Task<IActionResult> GetByIdAsync(string id)
         {
-            var asset = await _assetsService.GetByIdAsync(assetId);
+            var brokerId = User.GetTenantId();
+
+            var asset = await _assetsService.GetByIdAsync(brokerId, id);
 
             if (asset == null)
                 return NotFound();
@@ -73,7 +76,18 @@ namespace Assets.WebApi
         {
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetsService.AddAsync(brokerId, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            Domain.Entities.Asset asset;
+
+            try
+            {
+                asset = await _assetsService.AddAsync(model.Id, brokerId, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            }
+            catch (InvalidOperationException e)
+            {
+                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+
+                return BadRequest(ModelState);
+            }
 
             var newModel = _mapper.Map<Asset>(asset);
 
@@ -85,27 +99,48 @@ namespace Assets.WebApi
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetEdit model)
         {
-            var found = await _assetsService.UpdateAsync(model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            var brokerId = User.GetTenantId();
 
-            if (found == null)
+            Domain.Entities.Asset asset;
+
+            try
+            {
+                asset = await _assetsService.UpdateAsync(brokerId, model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+            }
+            catch (InvalidOperationException e)
+            {
+                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+
+                return BadRequest(ModelState);
+            }
+
+            if (asset == null)
                 return NotFound();
 
-            var updatedModel = _assetsService.GetByIdAsync(model.Id);
+            var updatedModel = _assetsService.GetByIdAsync(brokerId, model.Id);
 
             var newModel = _mapper.Map<Asset>(updatedModel);
 
             return Ok(newModel);
         }
 
-        [HttpDelete("{assetId}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync(string assetId)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
-            var found = await _assetsService.DeleteAsync(assetId);
+            var brokerId = User.GetTenantId();
 
-            if (!found)
-                return NotFound();
+            try
+            {
+                await _assetsService.DeleteAsync(brokerId, id);
+            }
+            catch (InvalidOperationException e)
+            {
+                ModelState.AddModelError($"{nameof(id)}", e.Message);
+
+                return BadRequest(ModelState);
+            }
 
             return Ok();
         }

@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Assets.Client.Api;
 using Assets.Client.Models.Assets;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using Service.Assets.Contracts;
 
@@ -19,18 +16,9 @@ namespace Assets.Client.Grpc
             _client = new Service.Assets.Contracts.Assets.AssetsClient(channel);
         }
 
-        public async Task<IReadOnlyList<AssetModel>> GetAllAsync()
+        public async Task<AssetModel> GetByIdAsync(string brokerId, string id)
         {
-            var response = await _client.GetAllAsync(new Empty());
-
-            return response.Assets
-                .Select(asset => new AssetModel(asset))
-                .ToList();
-        }
-
-        public async Task<AssetModel> GetByIdAsync(string assetId)
-        {
-            var response = await _client.GetByIdAsync(new GetAssetByIdRequest {AssetId = assetId});
+            var response = await _client.GetByIdAsync(new GetAssetByIdRequest { BrokerId = brokerId, Id = id });
 
             return response.Asset != null
                 ? new AssetModel(response.Asset)
@@ -41,6 +29,7 @@ namespace Assets.Client.Grpc
         {
             var response = await _client.AddAsync(new AddAssetRequest
             {
+                BrokerId = model.BrokerId,
                 Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
@@ -55,6 +44,7 @@ namespace Assets.Client.Grpc
         {
             await _client.UpdateAsync(new UpdateAssetRequest
             {
+                BrokerId = model.BrokerId,
                 Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
@@ -63,9 +53,9 @@ namespace Assets.Client.Grpc
             });
         }
 
-        public async Task DeleteAsync(string assetId)
+        public async Task DeleteAsync(string brokerId, string id)
         {
-            await _client.DeleteAsync(new DeleteAssetRequest {AssetId = assetId});
+            await _client.DeleteAsync(new DeleteAssetRequest { BrokerId = brokerId, Id = id });
         }
     }
 }

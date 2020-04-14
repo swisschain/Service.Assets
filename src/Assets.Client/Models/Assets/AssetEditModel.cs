@@ -1,10 +1,15 @@
-namespace Assets.Client.Models.Assets
+﻿namespace Assets.Client.Models.Assets
 {
     /// <summary>
     /// Represents an asset create/update information.
     /// </summary>
     public class AssetEditModel
     {
+        /// <summary>
+        /// Broker identifier.
+        /// </summary>
+        public string BrokerId { get; set; }
+
         /// <summary>
         /// The unique identifier.
         /// </summary>

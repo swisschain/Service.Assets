@@ -20,37 +20,30 @@ namespace Assets.Services
             _logger = logger;
         }
 
-        public Task<IReadOnlyList<Asset>> GetAllAsync()
-        {
-            return _assetsRepository.GetAllAsync();
-        }
-
         public Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId)
         {
             return _assetsRepository.GetAllAsync(brokerId);
         }
 
-        public Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string assetId, string name, bool? isDisabled,
+        public Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string id, string name, bool? isDisabled,
             ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
-            return _assetsRepository.GetAllAsync(brokerId, assetId, name, isDisabled, sortOrder, cursor, limit);
+            return _assetsRepository.GetAllAsync(brokerId, id, name, isDisabled, sortOrder, cursor, limit);
         }
 
-        public Task<Asset> GetByIdAsync(string assetId)
+        public Task<Asset> GetByIdAsync(string brokerId, string id)
         {
-            return _assetsRepository.GetByIdAsync(assetId);
+            return _assetsRepository.GetByIdAsync(brokerId, id);
         }
 
-        public async Task<Asset> AddAsync(string brokerId, string name, string description, int accuracy,
-            bool isDisabled)
+        public async Task<Asset> AddAsync(
+            string brokerId, string id, string name, string description, int accuracy, bool isDisabled)
         {
-            var assetId = Guid.NewGuid().ToString();
-
             var date = DateTime.UtcNow;
 
             var asset = new Asset
             {
-                Id = assetId,
+                Id = id,
                 BrokerId = brokerId,
                 Name = name,
                 Description = description,
@@ -67,18 +60,17 @@ namespace Assets.Services
             return asset;
         }
 
-        public async Task<Asset> UpdateAsync(string assetId, string name, string description, int accuracy, bool isDisabled)
+        public async Task<Asset> UpdateAsync(string brokerId, string id, string name, string description, int accuracy, bool isDisabled)
         {
-            var asset = await _assetsRepository.GetByIdAsync(assetId);
-
-            if (asset == null)
-                return null;
-
-            asset.Name = name;
-            asset.Description = description;
-            asset.Accuracy = accuracy;
-            asset.IsDisabled = isDisabled;
-            asset.Modified = DateTime.UtcNow;
+            var asset = new Asset
+            {
+                BrokerId = brokerId,
+                Id = id,
+                Name = name,
+                Description = description,
+                Accuracy = accuracy,
+                IsDisabled = isDisabled
+            };
 
             var result = await _assetsRepository.UpdateAsync(asset);
 
@@ -87,18 +79,11 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task<bool> DeleteAsync(string assetId)
+        public async Task DeleteAsync(string brokerId, string id)
         {
-            var asset = await _assetsRepository.GetByIdAsync(assetId);
+            await _assetsRepository.DeleteAsync(brokerId, id);
 
-            if (asset == null)
-                return false;
-
-            await _assetsRepository.DeleteAsync(assetId);
-
-            _logger.LogInformation("Asset deleted. {$Asset}", asset);
-
-            return true;
+            _logger.LogInformation("Asset deleted. BrokerId='{$BrokerId}', AssetId='{$id}'", brokerId, id);
         }
     }
 }

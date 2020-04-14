@@ -17,7 +17,6 @@ namespace TestClient
             var testData = new TestData();
 
             await CreateAssetsAsync(client, testData);
-            await GetAsync(client, testData);
             await UpdateAssetsAsync(client, testData);
 
             await CreateAssetPairsAsync(client, testData);
@@ -42,16 +41,6 @@ namespace TestClient
             }
         }
 
-        private static async Task GetAsync(AssetsClient client, TestData testData)
-        {
-            var getAllResponse = await client.Assets.GetAllAsync();
-
-            foreach (var asset in testData.Assets)
-            {
-                var getByIdResponse = await client.Assets.GetByIdAsync(asset.Id);
-            }
-        }
-
         private static async Task UpdateAssetsAsync(AssetsClient client, TestData testData)
         {
             foreach (var asset in testData.Assets)
@@ -67,7 +56,7 @@ namespace TestClient
         {
             foreach (var asset in testData.Assets)
             {
-                await client.Assets.DeleteAsync(asset.Id);
+                await client.Assets.DeleteAsync(asset.BrokerId, asset.Id);
             }
         }
 
