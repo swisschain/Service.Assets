@@ -48,8 +48,9 @@ namespace Assets.Repositories
             }
         }
 
-        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId,
-            bool isDisabled = false, ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
+        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(
+            string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {

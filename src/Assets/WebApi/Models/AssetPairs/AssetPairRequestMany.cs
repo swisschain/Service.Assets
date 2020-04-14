@@ -12,6 +12,6 @@ namespace Assets.WebApi.Models.AssetPairs
 
         public string QuoteAssetId { get; set; }
 
-        public bool IsDisabled { get; set; }
+        public bool? IsDisabled { get; set; }
     }
 }

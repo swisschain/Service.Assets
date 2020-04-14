@@ -13,8 +13,9 @@ namespace Assets.Domain.Services
 
         Task<AssetPair> GetByIdAsync(string assetPairId);
 
-        Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId,
-            bool isDisabled = false, ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
+        Task<IReadOnlyList<AssetPair>> GetAllAsync(
+            string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
         Task<AssetPair> AddAsync(string brokerId, string name, string baseAssetId, string quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,

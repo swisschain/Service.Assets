@@ -11,8 +11,9 @@ namespace Assets.Domain.Repositories
 
         Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId);
 
-        Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId,
-            bool isDisabled = false,  ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
+        Task<IReadOnlyList<AssetPair>> GetAllAsync(
+            string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
         Task<AssetPair> GetByIdAsync(string assetPairId);
 

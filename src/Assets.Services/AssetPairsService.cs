@@ -30,8 +30,9 @@ namespace Assets.Services
             return _assetPairsRepository.GetAllAsync(brokerId);
         }
 
-        public Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId,
-            bool isDisabled = false, ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
+        public Task<IReadOnlyList<AssetPair>> GetAllAsync(
+            string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             return _assetPairsRepository.GetAllAsync(brokerId, assetPairId, name, baseAssetId, quoteAssetId, isDisabled, sortOrder, cursor, limit);
         }
