@@ -87,7 +87,7 @@ namespace Assets.WebApi
             }
             catch (InvalidOperationException e)
             {
-                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+                ModelState.AddModelError($"{nameof(model.Symbol)}", e.Message);
 
                 return BadRequest(ModelState);
             }
@@ -114,7 +114,7 @@ namespace Assets.WebApi
             }
             catch (InvalidOperationException e)
             {
-                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+                ModelState.AddModelError($"{nameof(model.Symbol)}", e.Message);
 
                 return BadRequest(ModelState);
             }
@@ -122,7 +122,7 @@ namespace Assets.WebApi
             if (assetPair == null)
                 return NotFound();
 
-            var updatedModel = await _assetPairsService.GetByIdAsync(model.Id, brokerId);
+            var updatedModel = await _assetPairsService.GetBySymbolAsync(brokerId, model.Symbol);
 
             var newModel = _mapper.Map<AssetPair>(updatedModel);
 

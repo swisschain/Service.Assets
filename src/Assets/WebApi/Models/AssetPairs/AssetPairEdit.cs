@@ -6,11 +6,6 @@
     public class AssetPairEdit
     {
         /// <summary>
-        /// The unique identifier.
-        /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
         /// Symbol.
         /// </summary>
         public string Symbol { get; set; }
