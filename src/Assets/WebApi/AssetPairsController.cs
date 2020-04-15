@@ -46,7 +46,7 @@ namespace Assets.WebApi
 
             var brokerId = User.GetTenantId();
 
-            var assetPairs = await _assetPairsService.GetAllAsync(brokerId, request.Symbol, request.BaseAssetId, request.QuoteAssetId,
+            var assetPairs = await _assetPairsService.GetAllAsync(brokerId, request.Symbol,
                 request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
             var result = _mapper.Map<List<AssetPair>>(assetPairs);
@@ -122,7 +122,7 @@ namespace Assets.WebApi
             if (assetPair == null)
                 return NotFound();
 
-            var updatedModel = _assetPairsService.GetByIdAsync(model.Id, brokerId);
+            var updatedModel = await _assetPairsService.GetByIdAsync(model.Id, brokerId);
 
             var newModel = _mapper.Map<AssetPair>(updatedModel);
 

@@ -63,7 +63,7 @@ namespace Assets.Repositories
         }
 
         public async Task<IReadOnlyList<AssetPair>> GetAllAsync(
-            string brokerId, string symbol, long baseAssetId, long quoteAssetId, bool? isDisabled,
+            string brokerId, string symbol, bool? isDisabled,
             ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50)
         {
             using (var context = _connectionFactory.CreateDataContext())
@@ -75,13 +75,8 @@ namespace Assets.Repositories
                 if (!string.IsNullOrEmpty(symbol))
                     query = query.Where(x => EF.Functions.ILike(x.Symbol, $"%{symbol}%"));
 
-                if (baseAssetId != default)
-                    query = query.Where(assetPair => assetPair.BaseAssetId == baseAssetId);
-
-                if (quoteAssetId != default)
-                    query = query.Where(assetPair => assetPair.QuotingAssetId == quoteAssetId);
-
-                query = query.Where(asset => asset.IsDisabled == isDisabled);
+                if (isDisabled.HasValue)
+                    query = query.Where(x => x.IsDisabled == isDisabled);
 
                 if (sortOrder == ListSortDirection.Ascending)
                 {
@@ -128,7 +123,21 @@ namespace Assets.Repositories
                 if (existed != null)
                     throw new InvalidOperationException($"An asset pair with the same symbol '{assetPair.Symbol}' already exists.");
 
+                var existedBaseAsset = await GetAssetAsync(assetPair.BaseAssetId, assetPair.BrokerId, context);
+
+                if (existedBaseAsset == null)
+                    throw new InvalidOperationException($"Base asset with id '{assetPair.BaseAssetId}' not exists.");
+
+                var existedQuoteAsset = await GetAssetAsync(assetPair.QuotingAssetId, assetPair.BrokerId, context);
+
+                if (existedQuoteAsset == null)
+                    throw new InvalidOperationException($"Quote asset with id '{assetPair.QuotingAssetId}' not exists.");
+
                 var entity = _mapper.Map<AssetPairEntity>(assetPair);
+
+                var now = DateTime.UtcNow;
+                entity.Created = now;
+                entity.Modified = now;
 
                 context.AssetPairs.Add(entity);
 
@@ -149,7 +158,18 @@ namespace Assets.Repositories
                 if (existed == null)
                     throw new InvalidOperationException($"An asset pair with the identifier '{assetPair.Id}' not exists.");
 
+                if (existed.Symbol != assetPair.Symbol)
+                    throw new InvalidOperationException($"Symbol can't be changed from '{existed.Symbol}' to '{assetPair.Symbol}' after creation.");
+
+                if (existed.BaseAssetId != assetPair.BaseAssetId)
+                    throw new InvalidOperationException($"Base asset can't be changed from '{existed.BaseAssetId}' to '{assetPair.BaseAssetId}' after creation.");
+
+                if (existed.QuotingAssetId != assetPair.QuotingAssetId)
+                    throw new InvalidOperationException($"Quote asset can't be changed from '{existed.QuotingAssetId}' to '{assetPair.QuotingAssetId}' after creation.");
+
                 _mapper.Map(assetPair, existed);
+
+                existed.Modified = DateTime.UtcNow;
 
                 await context.SaveChangesAsync();
 
@@ -184,13 +204,25 @@ namespace Assets.Repositories
             return existed;
         }
 
-        private async Task<AssetEntity> GetAsync(string brokerId, string symbol, DataContext context)
+        private async Task<AssetPairEntity> GetAsync(string brokerId, string symbol, DataContext context)
         {
-            IQueryable<AssetEntity> query = context.Assets;
+            IQueryable<AssetPairEntity> query = context.AssetPairs;
 
             var existed = await query
                 .Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper())
                 .Where(x => x.Symbol.ToUpper() == symbol.ToUpper())
+                .SingleOrDefaultAsync();
+
+            return existed;
+        }
+
+        private async Task<AssetEntity> GetAssetAsync(long id, string brokerId, DataContext context)
+        {
+            IQueryable<AssetEntity> query = context.Assets;
+
+            var existed = await query
+                .Where(x => x.Id == id)
+                .Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper())
                 .SingleOrDefaultAsync();
 
             return existed;

@@ -51,7 +51,7 @@
         public decimal MaxOppositeVolume { get; set; }
 
         /// <summary>
-        /// The market order price threshold.
+        /// Maximum alowed slippage for market order, percents from middle price.
         /// </summary>
         public decimal MarketOrderPriceThreshold { get; set; }
 

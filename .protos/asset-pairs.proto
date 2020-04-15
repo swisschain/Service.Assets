@@ -25,10 +25,6 @@ message GetAllAssetPairsByBrokerIdRequest {
     string broker_id = 1;
 }
 
-message GetAllAssetPairsRequest {
-    string broker_id = 1;
-}
-
 message GetAllAssetPairsResponse {
     repeated AssetPair assetPairs = 1;
 }

@@ -113,8 +113,6 @@ namespace Assets.Repositories
 
         public async Task<Asset> InsertAsync(Asset asset)
         {
-            asset.Created = DateTime.UtcNow;
-
             using (var context = _connectionFactory.CreateDataContext())
             {
                 var existed = await GetAsync(asset.BrokerId, asset.Symbol, context);
@@ -123,6 +121,10 @@ namespace Assets.Repositories
                     throw new InvalidOperationException($"An asset with the same symbol '{asset.Symbol}' already exists.");
 
                 var entity = _mapper.Map<AssetEntity>(asset);
+
+                var now = DateTime.UtcNow;
+                entity.Created = now;
+                entity.Modified = now;
 
                 context.Assets.Add(entity);
 
@@ -134,8 +136,6 @@ namespace Assets.Repositories
 
         public async Task<Asset> UpdateAsync(Asset asset)
         {
-            asset.Modified = DateTime.UtcNow;
-
             using (var context = _connectionFactory.CreateDataContext())
             {
                 var existed = await GetAsync(asset.Id, asset.BrokerId, context);
@@ -143,7 +143,12 @@ namespace Assets.Repositories
                 if (existed == null)
                     throw new InvalidOperationException($"An asset with the identifier '{asset.Id}' not exists.");
 
+                if (existed.Symbol != asset.Symbol)
+                    throw new InvalidOperationException($"Symbol can't be changed from '{existed.Symbol}' to '{asset.Symbol}' after creation.");
+
                 _mapper.Map(asset, existed);
+
+                existed.Modified = DateTime.UtcNow;
 
                 await context.SaveChangesAsync();
 

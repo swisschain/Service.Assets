@@ -6,10 +6,6 @@ namespace Assets.WebApi.Models.AssetPairs
     {
         public string Symbol { get; set; }
 
-        public long BaseAssetId { get; set; }
-
-        public long QuoteAssetId { get; set; }
-
         public bool? IsDisabled { get; set; }
     }
 }

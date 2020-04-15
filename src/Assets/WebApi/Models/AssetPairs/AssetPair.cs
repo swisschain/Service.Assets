@@ -13,11 +13,6 @@ namespace Assets.WebApi.Models.AssetPairs
         public long Id { get; set; }
 
         /// <summary>
-        /// Broker identifier.
-        /// </summary>
-        public string BrokerId { get; set; }
-
-        /// <summary>
         /// Symbol.
         /// </summary>
         public string Symbol { get; set; }

@@ -117,7 +117,7 @@ namespace Assets.WebApi
             if (asset == null)
                 return NotFound();
 
-            var updatedModel = _assetsService.GetByIdAsync(model.Id, brokerId);
+            var updatedModel = await _assetsService.GetByIdAsync(model.Id, brokerId);
 
             var newModel = _mapper.Map<Asset>(updatedModel);
 
