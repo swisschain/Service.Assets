@@ -46,11 +46,6 @@ namespace Assets.Services
             return _assetPairsRepository.GetAllAsync(brokerId, symbol, isDisabled, sortOrder, cursor, limit);
         }
 
-        public Task<AssetPair> GetByIdAsync(long id, string brokerId)
-        {
-            return _assetPairsRepository.GetByIdAsync(id, brokerId);
-        }
-
         public Task<AssetPair> GetBySymbolAsync(string brokerId, string symbol)
         {
             return _assetPairsRepository.GetBySymbolAsync(brokerId, symbol);
@@ -64,20 +59,14 @@ namespace Assets.Services
 
             var quotingAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, quotingAsset);
 
-            return await AddAsync(brokerId, symbol, baseAssetEntity.Id, quotingAssetEntity.Id,
-                accuracy, minVolume, maxVolume, maxOppositeVolume, marketOrderPriceThreshold, isDisabled);
-        }
-
-        public async Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
-            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
-            decimal marketOrderPriceThreshold, bool isDisabled)
-        {
             var assetPair = new AssetPair
             {
                 BrokerId = brokerId,
                 Symbol = symbol,
-                BaseAssetId = baseAssetId,
-                QuotingAssetId = quotingAssetId,
+                BaseAssetId = baseAssetEntity.Id,
+                BaseAsset = baseAssetEntity.Symbol,
+                QuotingAssetId = quotingAssetEntity.Id,
+                QuotingAsset = quotingAssetEntity.Symbol,
                 Accuracy = accuracy,
                 MinVolume = minVolume,
                 MaxVolume = maxVolume,
@@ -102,22 +91,14 @@ namespace Assets.Services
 
             var quotingAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, quotingAsset);
 
-            return await UpdateAsync(brokerId, symbol, baseAssetEntity.Id, quotingAssetEntity.Id,
-                accuracy, minVolume, maxVolume, maxOppositeVolume, marketOrderPriceThreshold, isDisabled);
-        }
-
-        public async Task<AssetPair> UpdateAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
-            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
-            decimal marketOrderPriceThreshold, bool isDisabled)
-        {
             var assetPair = await _assetPairsRepository.GetBySymbolAsync(brokerId, symbol);
 
             if (assetPair == null)
                 return null;
 
             assetPair.Symbol = symbol;
-            assetPair.BaseAssetId = baseAssetId;
-            assetPair.QuotingAssetId = quotingAssetId;
+            assetPair.BaseAsset = baseAssetEntity.Symbol;
+            assetPair.QuotingAsset = quotingAssetEntity.Symbol;
             assetPair.Accuracy = accuracy;
             assetPair.MinVolume = minVolume;
             assetPair.MaxVolume = maxVolume;
@@ -131,20 +112,6 @@ namespace Assets.Services
             _logger.LogInformation("Asset pair updated. {$AssetPair}", assetPair);
 
             return result;
-        }
-
-        public async Task<bool> DeleteAsync(long id, string brokerId)
-        {
-            var assetPair = await _assetPairsRepository.GetByIdAsync(id, brokerId);
-
-            if (assetPair == null)
-                return false;
-
-            await _assetPairsRepository.DeleteAsync(id, brokerId);
-
-            _logger.LogInformation("Asset pair deleted. {$AssetPair}", assetPair);
-
-            return true;
         }
 
         public async Task<bool> DeleteAsync(string brokerId, string symbol)

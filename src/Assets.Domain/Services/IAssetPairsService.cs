@@ -13,8 +13,6 @@ namespace Assets.Domain.Services
 
         Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId);
 
-        Task<AssetPair> GetByIdAsync(long id, string brokerId);
-
         Task<AssetPair> GetBySymbolAsync(string brokerId, string symbol);
 
         Task<IReadOnlyList<AssetPair>> GetAllAsync(
@@ -25,19 +23,9 @@ namespace Assets.Domain.Services
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 
-        Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
-            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
-            decimal marketOrderPriceThreshold, bool isDisabled);
-
         Task<AssetPair> UpdateAsync(string brokerId, string symbol, string baseAsset, string quotingAsset,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
-
-        Task<AssetPair> UpdateAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
-            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
-            decimal marketOrderPriceThreshold, bool isDisabled);
-
-        Task<bool> DeleteAsync(long id, string brokerId);
 
         Task<bool> DeleteAsync(string brokerId, string symbol);
     }

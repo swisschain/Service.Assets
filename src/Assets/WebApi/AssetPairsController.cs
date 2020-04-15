@@ -138,7 +138,10 @@ namespace Assets.WebApi
 
             try
             {
-                await _assetPairsService.DeleteAsync(brokerId, symbol);
+                var isFound = await _assetPairsService.DeleteAsync(brokerId, symbol);
+
+                if (!isFound)
+                    return NotFound();
             }
             catch (InvalidOperationException e)
             {

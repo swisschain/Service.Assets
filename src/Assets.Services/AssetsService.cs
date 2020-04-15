@@ -88,11 +88,18 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task DeleteAsync(string brokerId, string symbol)
+        public async Task<bool> DeleteAsync(string brokerId, string symbol)
         {
+            var asset = await _assetsRepository.GetBySymbolAsync(brokerId, symbol);
+
+            if (asset == null)
+                return false;
+
             await _assetsRepository.DeleteAsync(brokerId, symbol);
 
-            _logger.LogInformation("Asset deleted. Symbol='{$id}', BrokerId='{$BrokerId}'", symbol, brokerId);
+            _logger.LogInformation("Asset deleted. Symbol='{$symbol}'", symbol);
+
+            return true;
         }
     }
 }

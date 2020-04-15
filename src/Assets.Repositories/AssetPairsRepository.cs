@@ -146,6 +146,9 @@ namespace Assets.Repositories
             {
                 var entity = await GetAsync(brokerId, symbol, context);
 
+                if (entity == null)
+                    return null;
+
                 var result = _mapper.Map<AssetPair>(entity);
 
                 await MapAssetsSymbolsToAssetPair(result, context);
@@ -165,15 +168,15 @@ namespace Assets.Repositories
                 if (existed != null)
                     throw new InvalidOperationException($"An asset pair with the same symbol '{assetPair.Symbol}' already exists.");
 
-                var existedBaseAsset = await GetAssetAsync(assetPair.BaseAssetId, assetPair.BrokerId, context);
+                var existedBaseAsset = await GetAssetAsync(assetPair.BrokerId, assetPair.BaseAsset, context);
 
                 if (existedBaseAsset == null)
-                    throw new InvalidOperationException($"Base asset with id '{assetPair.BaseAssetId}' not exists.");
+                    throw new InvalidOperationException($"Base asset '{assetPair.BaseAsset}' not exists.");
 
-                var existedQuoteAsset = await GetAssetAsync(assetPair.QuotingAssetId, assetPair.BrokerId, context);
+                var existedQuoteAsset = await GetAssetAsync(assetPair.BrokerId, assetPair.QuotingAsset, context);
 
                 if (existedQuoteAsset == null)
-                    throw new InvalidOperationException($"Quote asset with id '{assetPair.QuotingAssetId}' not exists.");
+                    throw new InvalidOperationException($"Quote asset '{assetPair.QuotingAsset}' not exists.");
 
                 var entity = _mapper.Map<AssetPairEntity>(assetPair);
 
@@ -202,13 +205,23 @@ namespace Assets.Repositories
                 var existed = await GetAsync(assetPair.BrokerId, assetPair.Symbol, context);
 
                 if (existed == null)
-                    throw new InvalidOperationException($"An asset pair with the identifier '{assetPair.Id}' not exists.");
+                    throw new InvalidOperationException($"An asset pair '{assetPair.Symbol}' not exists.");
 
-                if (existed.BaseAssetId != assetPair.BaseAssetId)
-                    throw new InvalidOperationException($"Base asset can't be changed from '{existed.BaseAssetId}' to '{assetPair.BaseAssetId}' after creation.");
+                var existedBaseAsset = await GetAssetAsync(assetPair.BrokerId, assetPair.BaseAsset, context);
 
-                if (existed.QuotingAssetId != assetPair.QuotingAssetId)
-                    throw new InvalidOperationException($"Quote asset can't be changed from '{existed.QuotingAssetId}' to '{assetPair.QuotingAssetId}' after creation.");
+                if (existedBaseAsset == null)
+                    throw new InvalidOperationException($"Base asset '{assetPair.BaseAsset}' not exists.");
+
+                var existedQuoteAsset = await GetAssetAsync(assetPair.BrokerId, assetPair.QuotingAsset, context);
+
+                if (existedQuoteAsset == null)
+                    throw new InvalidOperationException($"Quote asset '{assetPair.QuotingAsset}' not exists.");
+
+                if (existedBaseAsset.Symbol != assetPair.BaseAsset)
+                    throw new InvalidOperationException($"Base asset can't be changed from '{existedBaseAsset.Symbol}' to '{assetPair.BaseAsset}' after creation.");
+
+                if (existedQuoteAsset.Symbol != assetPair.QuotingAsset)
+                    throw new InvalidOperationException($"Quote asset can't be changed from '{existedQuoteAsset.Symbol}' to '{assetPair.QuotingAsset}' after creation.");
 
                 _mapper.Map(assetPair, existed);
 
@@ -231,7 +244,7 @@ namespace Assets.Repositories
                 var existed = await GetAsync(id, brokerId, context);
 
                 if (existed == null)
-                    throw new InvalidOperationException($"An asset pair with the identifier '{id}' not exists.");
+                    throw new InvalidOperationException($"Asset pair with identifier '{id}' not exists.");
 
                 context.Entry(existed).State = EntityState.Deleted;
 
@@ -246,7 +259,7 @@ namespace Assets.Repositories
                 var existed = await GetAsync(brokerId, symbol, context);
 
                 if (existed == null)
-                    throw new InvalidOperationException($"An asset pair with symbol '{symbol}' not exists.");
+                    throw new InvalidOperationException($"Asset pair '{symbol}' not exists.");
 
                 context.Entry(existed).State = EntityState.Deleted;
 
@@ -285,6 +298,18 @@ namespace Assets.Repositories
             var existed = await query
                 .Where(x => x.Id == id)
                 .Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper())
+                .SingleOrDefaultAsync();
+
+            return existed;
+        }
+
+        private async Task<AssetEntity> GetAssetAsync(string brokerId, string symbol, DataContext context)
+        {
+            IQueryable<AssetEntity> query = context.Assets;
+
+            var existed = await query
+                .Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper())
+                .Where(x => x.Symbol == symbol)
                 .SingleOrDefaultAsync();
 
             return existed;

@@ -9,11 +9,13 @@ namespace Assets.Repositories
         public AutoMapperProfile()
         {
             CreateMap<Asset, AssetEntity>(MemberList.Destination)
+                .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.Created, opt => opt.Ignore())
                 .ForMember(x => x.Modified, opt => opt.Ignore());
             CreateMap<AssetEntity, Asset>(MemberList.Destination);
 
             CreateMap<AssetPair, AssetPairEntity>(MemberList.Destination)
+                .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.Created, opt => opt.Ignore())
                 .ForMember(x => x.Modified, opt => opt.Ignore());
             CreateMap<AssetPairEntity, AssetPair>(MemberList.Destination)

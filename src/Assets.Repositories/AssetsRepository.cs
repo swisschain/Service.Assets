@@ -151,7 +151,7 @@ namespace Assets.Repositories
                 var existed = await GetAsync(asset.BrokerId, asset.Symbol, context);
 
                 if (existed == null)
-                    throw new InvalidOperationException($"An asset with the identifier '{asset.Id}' not exists.");
+                    throw new InvalidOperationException($"An asset with the identifier '{asset.Symbol}' not exists.");
 
                 if (existed.Symbol != asset.Symbol)
                     throw new InvalidOperationException($"Symbol can't be changed from '{existed.Symbol}' to '{asset.Symbol}' after creation.");
@@ -173,7 +173,7 @@ namespace Assets.Repositories
                 var existed = await GetAsync(brokerId, symbol, context);
 
                 if (existed == null)
-                    throw new InvalidOperationException($"An asset with the identifier '{symbol}' not exists.");
+                    throw new InvalidOperationException($"Asset '{symbol}' not exists.");
 
                 context.Entry(existed).State = EntityState.Deleted;
 
