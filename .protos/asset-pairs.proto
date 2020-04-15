@@ -18,11 +18,11 @@ service AssetPairs {
 }
 
 message GetAllAssetPairsByBrokerIdsRequest {
-    repeated string broker_ids = 1;
+    repeated string brokerIds = 1;
 }
 
 message GetAllAssetPairsByBrokerIdRequest {
-    string broker_id = 1;
+    string brokerId = 1;
 }
 
 message GetAllAssetPairsResponse {
@@ -30,7 +30,7 @@ message GetAllAssetPairsResponse {
 }
 
 message GetAssetPairBySymbolRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
 }
 
@@ -39,7 +39,7 @@ message GetAssetPairBySymbolResponse {
 }
 
 message AddAssetPairRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
     string baseAsset = 3;
     string quotingAsset = 4;
@@ -56,7 +56,7 @@ message AddAssetPairResponse {
 }
 
 message UpdateAssetPairRequest {
-    string broker_id = 2;
+    string brokerId = 2;
     string symbol = 3;
     string baseAsset = 4;
     string quotingAsset = 5;
@@ -69,12 +69,12 @@ message UpdateAssetPairRequest {
 }
 
 message DeleteAssetPairRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
 }
 
 message AssetPair {
-    string broker_id = 2;
+    string brokerId = 2;
     string symbol = 3;
     string baseAsset = 4;
     string quotingAsset = 5;

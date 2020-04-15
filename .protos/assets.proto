@@ -18,11 +18,11 @@ service Assets {
 }
 
 message GetAllAssetsByBrokerIdsRequest {
-    repeated string broker_ids = 1;
+    repeated string brokerIds = 1;
 }
 
 message GetAllAssetsByBrokerIdRequest {
-    string broker_id = 1;
+    string brokerId = 1;
 }
 
 message GetAllAssetsResponse {
@@ -30,7 +30,7 @@ message GetAllAssetsResponse {
 }
 
 message GetAssetBySymbolRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
 }
 
@@ -39,7 +39,7 @@ message GetAssetBySymbolResponse {
 }
 
 message AddAssetRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
     string description = 3;
     int32 accuracy = 4;
@@ -51,7 +51,7 @@ message AddAssetResponse {
 }
 
 message UpdateAssetRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
     string description = 3;
     int32 accuracy = 4;
@@ -59,12 +59,12 @@ message UpdateAssetRequest {
 }
 
 message DeleteAssetRequest {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
 }
 
 message Asset {
-    string broker_id = 1;
+    string brokerId = 1;
     string symbol = 2;
     string description = 3;
     int32 accuracy = 4;
