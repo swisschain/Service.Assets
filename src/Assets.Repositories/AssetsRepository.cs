@@ -23,6 +23,32 @@ namespace Assets.Repositories
             _mapper = mapper;
         }
 
+        public async Task<IReadOnlyList<Asset>> GetAllAsync()
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                IQueryable<AssetEntity> query = context.Assets;
+
+                var entities = await query.ToListAsync();
+
+                return _mapper.Map<List<Asset>>(entities);
+            }
+        }
+
+        public async Task<IReadOnlyList<Asset>> GetAllAsync(IEnumerable<string> brokerIds)
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                IQueryable<AssetEntity> query = context.Assets;
+
+                query = query.Where(x => brokerIds.Contains(x.BrokerId));
+
+                var entities = await query.ToListAsync();
+
+                return _mapper.Map<List<Asset>>(entities);
+            }
+        }
+
         public async Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId)
         {
             using (var context = _connectionFactory.CreateDataContext())

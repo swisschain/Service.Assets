@@ -81,7 +81,7 @@ namespace TestClient
 
         private static async Task GetAssetPairsAsync(AssetsClient client, TestData testData)
         {
-            var getAllResponse = await client.AssetPairs.GetAllAsync("brokerId");
+            var getAllResponse = await client.AssetPairs.GetAllAsync();
 
             foreach (var assetPair in testData.AssetPairs)
             {

@@ -7,6 +7,10 @@ namespace Assets.Domain.Services
 {
     public interface IAssetsService
     {
+        Task<IReadOnlyList<Asset>> GetAllAsync();
+
+        Task<IReadOnlyList<Asset>> GetAllAsync(IEnumerable<string> brokerIds);
+
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId);
 
         Task<Asset> GetByIdAsync(long id, string brokerId);

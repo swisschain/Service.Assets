@@ -9,6 +9,8 @@ namespace Assets.Domain.Services
     {
         Task<IReadOnlyList<AssetPair>> GetAllAsync();
 
+        Task<IReadOnlyList<AssetPair>> GetAllAsync(IEnumerable<string> brokerIds);
+
         Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId);
 
         Task<AssetPair> GetByIdAsync(long id, string brokerId);

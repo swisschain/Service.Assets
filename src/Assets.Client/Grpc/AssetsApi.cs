@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Assets.Client.Api;
 using Assets.Client.Models.Assets;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using Service.Assets.Contracts;
 
@@ -14,6 +17,33 @@ namespace Assets.Client.Grpc
         {
             var channel = GrpcChannel.ForAddress(address);
             _client = new Service.Assets.Contracts.Assets.AssetsClient(channel);
+        }
+
+        public async Task<IReadOnlyList<AssetModel>> GetAllAsync()
+        {
+            var response = await _client.GetAllAsync(new Empty());
+
+            return response.Assets
+                .Select(asset => new AssetModel(asset))
+                .ToList();
+        }
+
+        public async Task<IReadOnlyList<AssetModel>> GetAllByBrokerIds(IEnumerable<string> brokerIds)
+        {
+            var response = await _client.GetAllByBrokerIdsAsync(new GetAllAssetsByBrokerIdsRequest { BrokerIds = { brokerIds } });
+
+            return response.Assets
+                .Select(asset => new AssetModel(asset))
+                .ToList();
+        }
+
+        public async Task<IReadOnlyList<AssetModel>> GetAllByBrokerId(string brokerId)
+        {
+            var response = await _client.GetAllByBrokerIdAsync(new GetAllAssetsByBrokerIdRequest { BrokerId = brokerId });
+
+            return response.Assets
+                .Select(asset => new AssetModel(asset))
+                .ToList();
         }
 
         public async Task<AssetModel> GetByIdAsync(long id, string brokerId)

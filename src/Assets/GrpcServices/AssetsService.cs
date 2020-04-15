@@ -18,6 +18,39 @@ namespace Assets.GrpcServices
             _mapper = mapper;
         }
 
+        public override async Task<GetAllAssetsResponse> GetAll(Empty request, ServerCallContext context)
+        {
+            var assets = await _assetsService.GetAllAsync();
+
+            var response = new GetAllAssetsResponse();
+
+            response.Assets.AddRange(_mapper.Map<Asset[]>(assets));
+
+            return response;
+        }
+
+        public override async Task<GetAllAssetsResponse> GetAllByBrokerIds(GetAllAssetsByBrokerIdsRequest request, ServerCallContext context)
+        {
+            var assets = await _assetsService.GetAllAsync(request.BrokerIds);
+
+            var response = new GetAllAssetsResponse();
+
+            response.Assets.AddRange(_mapper.Map<Asset[]>(assets));
+
+            return response;
+        }
+
+        public override async Task<GetAllAssetsResponse> GetAllByBrokerId(GetAllAssetsByBrokerIdRequest request, ServerCallContext context)
+        {
+            var assets = await _assetsService.GetAllAsync(request.BrokerId);
+
+            var response = new GetAllAssetsResponse();
+
+            response.Assets.AddRange(_mapper.Map<Asset[]>(assets));
+
+            return response;
+        }
+
         public override async Task<GetAssetByIdResponse> GetById(GetAssetByIdRequest request, ServerCallContext context)
         {
             var asset = await _assetsService.GetByIdAsync(request.Id, request.BrokerId);

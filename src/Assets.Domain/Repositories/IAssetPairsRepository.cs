@@ -9,6 +9,8 @@ namespace Assets.Domain.Repositories
     {
         Task<IReadOnlyList<AssetPair>> GetAllAsync();
 
+        Task<IReadOnlyList<AssetPair>> GetAllAsync(IEnumerable<string> brokerIds);
+
         Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId);
 
         Task<IReadOnlyList<AssetPair>> GetAllAsync(

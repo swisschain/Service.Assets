@@ -20,6 +20,17 @@ namespace Assets.Services
             _logger = logger;
         }
 
+        public Task<IReadOnlyList<Asset>> GetAllAsync()
+        {
+            return _assetsRepository.GetAllAsync();
+        }
+
+        public Task<IReadOnlyList<Asset>> GetAllAsync(IEnumerable<string> brokerIds)
+        {
+            return _assetsRepository.GetAllAsync(brokerIds);
+        }
+
+
         public Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId)
         {
             return _assetsRepository.GetAllAsync(brokerId);

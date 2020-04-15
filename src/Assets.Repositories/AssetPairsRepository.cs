@@ -34,6 +34,20 @@ namespace Assets.Repositories
             }
         }
 
+        public async Task<IReadOnlyList<AssetPair>> GetAllAsync(IEnumerable<string> brokerIds)
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                IQueryable<AssetPairEntity> query = context.AssetPairs;
+
+                query = query.Where(x => brokerIds.Contains(x.BrokerId));
+
+                var entities = await query.ToListAsync();
+
+                return _mapper.Map<List<AssetPair>>(entities);
+            }
+        }
+
         public async Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId)
         {
             using (var context = _connectionFactory.CreateDataContext())

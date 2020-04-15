@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Assets.Client.Api;
 using Assets.Client.Models.AssetPairs;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using Service.Assets.Contracts;
 
@@ -19,9 +20,36 @@ namespace Assets.Client.Grpc
             _client = new AssetPairs.AssetPairsClient(channel);
         }
 
+        public async Task<IReadOnlyList<AssetPairModel>> GetAllAsync()
+        {
+            var response = await _client.GetAllAsync(new Empty());
+
+            return response.AssetPairs
+                .Select(asset => new AssetPairModel(asset))
+                .ToList();
+        }
+
+        public async Task<IReadOnlyList<AssetPairModel>> GetAllByBrokerIds(IEnumerable<string> brokerIds)
+        {
+            var response = await _client.GetAllByBrokerIdsAsync(new GetAllAssetPairsByBrokerIdsRequest { BrokerIds = { brokerIds } });
+
+            return response.AssetPairs
+                .Select(asset => new AssetPairModel(asset))
+                .ToList();
+        }
+
+        public async Task<IReadOnlyList<AssetPairModel>> GetAllByBrokerId(string brokerId)
+        {
+            var response = await _client.GetAllByBrokerIdAsync(new GetAllAssetPairsByBrokerIdRequest { BrokerId = brokerId });
+
+            return response.AssetPairs
+                .Select(asset => new AssetPairModel(asset))
+                .ToList();
+        }
+
         public async Task<IReadOnlyList<AssetPairModel>> GetAllAsync(string brokerId)
         {
-            var response = await _client.GetAllAsync(new GetAllAssetPairsRequest { BrokerId = brokerId });
+            var response = await _client.GetAllByBrokerIdAsync(new GetAllAssetPairsByBrokerIdRequest { BrokerId = brokerId });
 
             return response.AssetPairs
                 .Select(asset => new AssetPairModel(asset))

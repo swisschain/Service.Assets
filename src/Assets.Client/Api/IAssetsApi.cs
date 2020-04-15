@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Assets.Client.Models.Assets;
 
 namespace Assets.Client.Api
@@ -8,6 +9,21 @@ namespace Assets.Client.Api
     /// </summary>
     public interface IAssetsApi
     {
+        /// <summary>
+        /// Returns all assets.
+        /// </summary>
+        Task<IReadOnlyList<AssetModel>> GetAllAsync();
+
+        /// <summary>
+        /// Returns all assets by list of brokers ids.
+        /// </summary>
+        Task<IReadOnlyList<AssetModel>> GetAllByBrokerIds(IEnumerable<string> brokerIds);
+
+        /// <summary>
+        /// Returns all assets by a broker id.
+        /// </summary>
+        Task<IReadOnlyList<AssetModel>> GetAllByBrokerId(string brokerId);
+
         /// <summary>
         /// Returns an asset by identifier.
         /// </summary>

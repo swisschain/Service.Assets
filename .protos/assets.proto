@@ -8,14 +8,20 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service Assets {
-    rpc GetAll (GetAllAssetsRequest) returns (GetAllAssetsResponse);
+    rpc GetAll (google.protobuf.Empty) returns (GetAllAssetsResponse);
+    rpc GetAllByBrokerIds (GetAllAssetsByBrokerIdsRequest) returns (GetAllAssetsResponse);
+    rpc GetAllByBrokerId (GetAllAssetsByBrokerIdRequest) returns (GetAllAssetsResponse);
     rpc GetById (GetAssetByIdRequest) returns (GetAssetByIdResponse);
     rpc Add (AddAssetRequest) returns (AddAssetResponse);
     rpc Update (UpdateAssetRequest) returns (google.protobuf.Empty);
     rpc Delete (DeleteAssetRequest) returns (google.protobuf.Empty);
 }
 
-message GetAllAssetsRequest {
+message GetAllAssetsByBrokerIdsRequest {
+    repeated string broker_ids = 1;
+}
+
+message GetAllAssetsByBrokerIdRequest {
     string broker_id = 1;
 }
 

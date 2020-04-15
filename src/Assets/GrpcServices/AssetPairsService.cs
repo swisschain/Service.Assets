@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Assets.Domain.Services;
 using AutoMapper;
 using Google.Protobuf.WellKnownTypes;
@@ -19,13 +18,35 @@ namespace Assets.GrpcServices
             _mapper = mapper;
         }
 
-        public override async Task<GetAllAssetPairsResponse> GetAll(GetAllAssetPairsRequest request, ServerCallContext context)
+        public override async Task<GetAllAssetPairsResponse> GetAll(Empty request, ServerCallContext context)
+        {
+            var assetPairs = await _assetPairsService.GetAllAsync();
+
+            var response = new GetAllAssetPairsResponse();
+
+            response.AssetPairs.AddRange(_mapper.Map<AssetPair[]>(assetPairs));
+
+            return response;
+        }
+
+        public override async Task<GetAllAssetPairsResponse> GetAllByBrokerIds(GetAllAssetPairsByBrokerIdsRequest request, ServerCallContext context)
+        {
+            var assetPairs = await _assetPairsService.GetAllAsync(request.BrokerIds);
+
+            var response = new GetAllAssetPairsResponse();
+
+            response.AssetPairs.AddRange(_mapper.Map<AssetPair[]>(assetPairs));
+
+            return response;
+        }
+
+        public override async Task<GetAllAssetPairsResponse> GetAllByBrokerId(GetAllAssetPairsByBrokerIdRequest request, ServerCallContext context)
         {
             var assetPairs = await _assetPairsService.GetAllAsync(request.BrokerId);
 
             var response = new GetAllAssetPairsResponse();
 
-            response.AssetPairs.AddRange(_mapper.Map<List<AssetPair>>(assetPairs));
+            response.AssetPairs.AddRange(_mapper.Map<AssetPair[]>(assetPairs));
 
             return response;
         }

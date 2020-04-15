@@ -25,6 +25,11 @@ namespace Assets.Services
             return _assetPairsRepository.GetAllAsync();
         }
 
+        public Task<IReadOnlyList<AssetPair>> GetAllAsync(IEnumerable<string> brokerIds)
+        {
+            return _assetPairsRepository.GetAllAsync(brokerIds);
+        }
+
         public Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId)
         {
             return _assetPairsRepository.GetAllAsync(brokerId);
