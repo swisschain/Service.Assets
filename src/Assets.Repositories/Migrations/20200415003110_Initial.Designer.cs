@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Assets.Repositories.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200407103106_AddBrokerId")]
-    partial class AddBrokerId
+    [Migration("20200415003110_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,9 +24,11 @@ namespace Assets.Repositories.Migrations
 
             modelBuilder.Entity("Assets.Repositories.Entities.AssetEntity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("id")
-                        .HasColumnType("varchar(36)");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Accuracy")
                         .HasColumnName("accuracy")
@@ -53,30 +55,34 @@ namespace Assets.Repositories.Migrations
                         .HasColumnName("modified")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Symbol")
                         .IsRequired()
-                        .HasColumnName("name")
-                        .HasColumnType("varchar(100)");
+                        .HasColumnName("symbol")
+                        .HasColumnType("varchar(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BrokerId", "Symbol")
+                        .IsUnique();
 
                     b.ToTable("assets");
                 });
 
             modelBuilder.Entity("Assets.Repositories.Entities.AssetPairEntity", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("id")
-                        .HasColumnType("varchar(36)");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<int>("Accuracy")
                         .HasColumnName("accuracy")
                         .HasColumnType("integer");
 
-                    b.Property<string>("BaseAssetId")
-                        .IsRequired()
+                    b.Property<long>("BaseAssetId")
                         .HasColumnName("base_asset_id")
-                        .HasColumnType("varchar(36)");
+                        .HasColumnType("bigint");
 
                     b.Property<string>("BrokerId")
                         .IsRequired()
@@ -111,14 +117,13 @@ namespace Assets.Repositories.Migrations
                         .HasColumnName("modified")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnName("name")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("QuotingAssetId")
-                        .IsRequired()
+                    b.Property<long>("QuotingAssetId")
                         .HasColumnName("quoting_asset_id")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnName("symbol")
                         .HasColumnType("varchar(36)");
 
                     b.HasKey("Id");
@@ -126,6 +131,9 @@ namespace Assets.Repositories.Migrations
                     b.HasIndex("BaseAssetId");
 
                     b.HasIndex("QuotingAssetId");
+
+                    b.HasIndex("BrokerId", "Symbol")
+                        .IsUnique();
 
                     b.ToTable("asset_pairs");
                 });

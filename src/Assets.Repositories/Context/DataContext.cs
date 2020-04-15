@@ -55,6 +55,12 @@ namespace Assets.Repositories.Context
                 .WithMany()
                 .HasForeignKey(o => o.QuotingAssetId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AssetEntity>()
+                .HasIndex(p => new { p.BrokerId, p.Symbol }).IsUnique();
+
+            modelBuilder.Entity<AssetPairEntity>()
+                .HasIndex(p => new { p.BrokerId, p.Symbol }).IsUnique();
         }
     }
 }

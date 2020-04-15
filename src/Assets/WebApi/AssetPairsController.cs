@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
@@ -45,7 +46,7 @@ namespace Assets.WebApi
 
             var brokerId = User.GetTenantId();
 
-            var assetPairs = await _assetPairsService.GetAllAsync(brokerId, request.AssetPairId, request.Name, request.BaseAssetId, request.QuoteAssetId,
+            var assetPairs = await _assetPairsService.GetAllAsync(brokerId, request.Symbol, request.BaseAssetId, request.QuoteAssetId,
                 request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
             var result = _mapper.Map<List<AssetPair>>(assetPairs);
@@ -53,12 +54,14 @@ namespace Assets.WebApi
             return Ok(result.Paginate(request, Url, x => x.Id));
         }
 
-        [HttpGet("{assetPairId}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByIdAsync(string assetPairId)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
-            var assetPair = await _assetPairsService.GetByIdAsync(assetPairId);
+            var brokerId = User.GetTenantId();
+
+            var assetPair = await _assetPairsService.GetByIdAsync(id, brokerId);
 
             if (assetPair == null)
                 return NotFound();
@@ -74,11 +77,22 @@ namespace Assets.WebApi
         {
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetPairsService.AddAsync(brokerId, model.Name, model.BaseAssetId,
-                model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
-                model.MarketOrderPriceThreshold, model.IsDisabled);
+            Domain.Entities.AssetPair assetPair;
 
-            var newModel = _mapper.Map<AssetPair>(asset);
+            try
+            {
+                assetPair = await _assetPairsService.AddAsync(brokerId, model.Symbol, model.BaseAssetId,
+                    model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+                    model.MarketOrderPriceThreshold, model.IsDisabled);
+            }
+            catch (InvalidOperationException e)
+            {
+                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+
+                return BadRequest(ModelState);
+            }
+
+            var newModel = _mapper.Map<AssetPair>(assetPair);
 
             return Ok(newModel);
         }
@@ -88,29 +102,50 @@ namespace Assets.WebApi
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
         {
-            var found = await _assetPairsService.UpdateAsync(model.Id, model.Name, model.BaseAssetId,
-                model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
-                model.MarketOrderPriceThreshold, model.IsDisabled);
+            var brokerId = User.GetTenantId();
 
-            if (found == null)
+            Domain.Entities.AssetPair assetPair;
+
+            try
+            {
+                assetPair = await _assetPairsService.UpdateAsync(model.Id, brokerId, model.Symbol, model.BaseAssetId,
+                    model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+                    model.MarketOrderPriceThreshold, model.IsDisabled);
+            }
+            catch (InvalidOperationException e)
+            {
+                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+
+                return BadRequest(ModelState);
+            }
+
+            if (assetPair == null)
                 return NotFound();
 
-            var updatedModel = await _assetPairsService.GetByIdAsync(model.Id);
+            var updatedModel = _assetPairsService.GetByIdAsync(model.Id, brokerId);
 
             var newModel = _mapper.Map<AssetPair>(updatedModel);
 
             return Ok(newModel);
         }
 
-        [HttpDelete("{assetPairId}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync(string assetPairId)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
-            var found = await _assetPairsService.DeleteAsync(assetPairId);
+            var brokerId = User.GetTenantId();
 
-            if (!found)
-                return NotFound();
+            try
+            {
+                await _assetPairsService.DeleteAsync(id, brokerId);
+            }
+            catch (InvalidOperationException e)
+            {
+                ModelState.AddModelError($"{nameof(id)}", e.Message);
+
+                return BadRequest(ModelState);
+            }
 
             return Ok();
         }

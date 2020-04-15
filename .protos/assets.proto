@@ -8,11 +8,15 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service Assets {
-    rpc GetAll (google.protobuf.Empty) returns (GetAllAssetsResponse);
+    rpc GetAll (GetAllAssetsRequest) returns (GetAllAssetsResponse);
     rpc GetById (GetAssetByIdRequest) returns (GetAssetByIdResponse);
     rpc Add (AddAssetRequest) returns (AddAssetResponse);
     rpc Update (UpdateAssetRequest) returns (google.protobuf.Empty);
     rpc Delete (DeleteAssetRequest) returns (google.protobuf.Empty);
+}
+
+message GetAllAssetsRequest {
+    string broker_id = 1;
 }
 
 message GetAllAssetsResponse {
@@ -20,7 +24,7 @@ message GetAllAssetsResponse {
 }
 
 message GetAssetByIdRequest {
-    string id = 1;
+    int64 id = 1;
     string broker_id = 2;
 }
 
@@ -29,12 +33,11 @@ message GetAssetByIdResponse {
 }
 
 message AddAssetRequest {
-    string id = 1;
-    string name = 2;
+    string broker_id = 1;
+    string symbol = 2;
     string description = 3;
     int32 accuracy = 4;
     bool is_disabled = 5;
-    string broker_id = 6;
 }
 
 message AddAssetResponse {
@@ -42,26 +45,26 @@ message AddAssetResponse {
 }
 
 message UpdateAssetRequest {
-    string id = 1;
-    string name = 2;
-    string description = 3;
-    int32 accuracy = 4;
-    bool is_disabled = 5;
-    string broker_id = 6;
+    int64 id = 1;
+    string broker_id = 2;
+    string symbol = 3;
+    string description = 4;
+    int32 accuracy = 5;
+    bool is_disabled = 6;
 }
 
 message DeleteAssetRequest {
-    string id = 1;
+    int64 id = 1;
     string broker_id = 2;
 }
 
 message Asset {
-    string id = 1;
-    string name = 2;
-    string description = 3;
-    int32 accuracy = 4;
-    bool is_disabled = 5;
-    google.protobuf.Timestamp created = 6;
-    google.protobuf.Timestamp modified = 7;
-    string broker_id = 8;
+    int64 id = 1;
+    string broker_id = 2;
+    string symbol = 3;
+    string description = 4;
+    int32 accuracy = 5;
+    bool is_disabled = 6;
+    google.protobuf.Timestamp created = 7;
+    google.protobuf.Timestamp modified = 8;
 }

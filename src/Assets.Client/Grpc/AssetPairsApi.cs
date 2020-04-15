@@ -1,10 +1,9 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Assets.Client.Api;
 using Assets.Client.Models.AssetPairs;
-using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using Service.Assets.Contracts;
 
@@ -20,18 +19,18 @@ namespace Assets.Client.Grpc
             _client = new AssetPairs.AssetPairsClient(channel);
         }
 
-        public async Task<IReadOnlyList<AssetPairModel>> GetAllAsync()
+        public async Task<IReadOnlyList<AssetPairModel>> GetAllAsync(string brokerId)
         {
-            var response = await _client.GetAllAsync(new Empty());
+            var response = await _client.GetAllAsync(new GetAllAssetPairsRequest { BrokerId = brokerId });
 
             return response.AssetPairs
                 .Select(asset => new AssetPairModel(asset))
                 .ToList();
         }
 
-        public async Task<AssetPairModel> GetByIdAsync(string assetPairId)
+        public async Task<AssetPairModel> GetByIdAsync(long id, string brokerId)
         {
-            var response = await _client.GetByIdAsync(new GetAssetPairByIdRequest {AssetPairId = assetPairId});
+            var response = await _client.GetByIdAsync(new GetAssetPairByIdRequest { Id = id, BrokerId = brokerId });
 
             return response.AssetPair != null
                 ? new AssetPairModel(response.AssetPair)
@@ -42,8 +41,8 @@ namespace Assets.Client.Grpc
         {
             var response = await _client.AddAsync(new AddAssetPairRequest
             {
-                Id = model.Id,
-                Name = model.Name,
+                BrokerId = model.BrokerId,
+                Symbol = model.Symbol,
                 Accuracy = model.Accuracy,
                 BaseAssetId = model.BaseAssetId,
                 QuotingAssetId = model.QuotingAssetId,
@@ -62,7 +61,8 @@ namespace Assets.Client.Grpc
             await _client.UpdateAsync(new UpdateAssetPairRequest
             {
                 Id = model.Id,
-                Name = model.Name,
+                BrokerId = model.BrokerId,
+                Symbol = model.Symbol,
                 Accuracy = model.Accuracy,
                 BaseAssetId = model.BaseAssetId,
                 QuotingAssetId = model.QuotingAssetId,
@@ -74,9 +74,9 @@ namespace Assets.Client.Grpc
             });
         }
 
-        public async Task DeleteAsync(string assetPairId)
+        public async Task DeleteAsync(long id, string brokerId)
         {
-            await _client.DeleteAsync(new DeleteAssetPairRequest {AssetPairId = assetPairId});
+            await _client.DeleteAsync(new DeleteAssetPairRequest { Id =  id, BrokerId = brokerId });
         }
     }
 }

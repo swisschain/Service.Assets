@@ -10,7 +10,7 @@ namespace Assets.Domain.Entities
         /// <summary>
         /// The unique identifier.
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Broker identifier.
@@ -18,9 +18,9 @@ namespace Assets.Domain.Entities
         public string BrokerId { get; set; }
 
         /// <summary>
-        /// The human-readable name.
+        /// Symbol.
         /// </summary>
-        public string Name { get; set; }
+        public string Symbol { get; set; }
 
         /// <summary>
         /// The additional information.

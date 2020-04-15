@@ -19,7 +19,7 @@ namespace Assets.Client.Models.Assets
         {
             Id = asset.Id;
             BrokerId = BrokerId;
-            Name = asset.Name;
+            Symbol = asset.Symbol;
             Description = asset.Description;
             Accuracy = asset.Accuracy;
             IsDisabled = asset.IsDisabled;
@@ -30,7 +30,7 @@ namespace Assets.Client.Models.Assets
         /// <summary>
         /// The unique identifier.
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Broker identifier.
@@ -40,7 +40,7 @@ namespace Assets.Client.Models.Assets
         /// <summary>
         /// The human-readable name.
         /// </summary>
-        public string Name { get; set; }
+        public string Symbol { get; set; }
 
         /// <summary>
         /// The additional information.

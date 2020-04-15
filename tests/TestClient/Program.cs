@@ -36,7 +36,7 @@ namespace TestClient
             {
                 await client.Assets.AddAsync(new AssetEditModel
                 {
-                    Id = asset.Id, Name = asset.Name, Accuracy = asset.Accuracy, Description = asset.Description
+                    BrokerId = asset.BrokerId, Symbol = asset.Symbol, Accuracy = asset.Accuracy, Description = asset.Description
                 });
             }
         }
@@ -47,7 +47,7 @@ namespace TestClient
             {
                 await client.Assets.UpdateAsync(new AssetEditModel
                 {
-                    Id = asset.Id, Name = asset.Name, Accuracy = asset.Accuracy, Description = asset.Description
+                    Id = asset.Id, BrokerId = asset.BrokerId, Symbol = asset.Symbol, Accuracy = asset.Accuracy, Description = asset.Description
                 });
             }
         }
@@ -56,7 +56,7 @@ namespace TestClient
         {
             foreach (var asset in testData.Assets)
             {
-                await client.Assets.DeleteAsync(asset.BrokerId, asset.Id);
+                await client.Assets.DeleteAsync(asset.Id, asset.BrokerId);
             }
         }
 
@@ -66,8 +66,8 @@ namespace TestClient
             {
                 await client.AssetPairs.AddAsync(new AssetPairEditModel
                 {
-                    Id = assetPair.Id,
-                    Name = assetPair.Name,
+                    BrokerId = assetPair.BrokerId,
+                    Symbol = assetPair.Symbol,
                     Accuracy = assetPair.Accuracy,
                     BaseAssetId = assetPair.BaseAssetId,
                     QuotingAssetId = assetPair.QuotingAssetId,
@@ -81,11 +81,11 @@ namespace TestClient
 
         private static async Task GetAssetPairsAsync(AssetsClient client, TestData testData)
         {
-            var getAllResponse = await client.AssetPairs.GetAllAsync();
+            var getAllResponse = await client.AssetPairs.GetAllAsync("brokerId");
 
             foreach (var assetPair in testData.AssetPairs)
             {
-                var getByIdResponse = await client.AssetPairs.GetByIdAsync(assetPair.Id);
+                var getByIdResponse = await client.AssetPairs.GetByIdAsync(assetPair.Id, assetPair.BrokerId);
             }
         }
 
@@ -96,7 +96,7 @@ namespace TestClient
                 await client.AssetPairs.UpdateAsync(new AssetPairEditModel
                 {
                     Id = assetPair.Id,
-                    Name = assetPair.Name,
+                    Symbol = assetPair.Symbol,
                     Accuracy = assetPair.Accuracy,
                     BaseAssetId = assetPair.BaseAssetId,
                     QuotingAssetId = assetPair.QuotingAssetId,
@@ -112,7 +112,7 @@ namespace TestClient
         {
             foreach (var assetPair in testData.AssetPairs)
             {
-                await client.AssetPairs.DeleteAsync(assetPair.Id);
+                await client.AssetPairs.DeleteAsync(assetPair.Id, assetPair.BrokerId);
             }
         }
     }

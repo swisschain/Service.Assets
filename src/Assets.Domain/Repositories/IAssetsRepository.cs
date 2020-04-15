@@ -9,15 +9,15 @@ namespace Assets.Domain.Repositories
     {
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId);
 
-        Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string id, string name, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
+        Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string symbol, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50);
 
-        Task<Asset> GetByIdAsync(string brokerId, string id);
+        Task<Asset> GetByIdAsync(long id, string brokerId);
 
         Task<Asset> InsertAsync(Asset asset);
 
         Task<Asset> UpdateAsync(Asset asset);
 
-        Task DeleteAsync(string brokerId, string id);
+        Task DeleteAsync(long id, string brokerId);
     }
 }

@@ -7,25 +7,25 @@ namespace Assets.Repositories.Entities
     [Table("asset_pairs")]
     public class AssetPairEntity
     {
-        [Key]
-        [Column("id", TypeName = "varchar(36)")]
-        public string Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
+        public long Id { get; set; }
 
         [Required]
         [Column("broker_id", TypeName = "varchar(36)")]
         public string BrokerId { get; set; }
 
         [Required]
-        [Column("name", TypeName = "varchar(100)")]
-        public string Name { get; set; }
+        [Column("symbol", TypeName = "varchar(36)")]
+        public string Symbol { get; set; }
 
         [Required]
-        [Column("base_asset_id", TypeName = "varchar(36)")]
-        public string BaseAssetId { get; set; }
+        [Column("base_asset_id")]
+        public long BaseAssetId { get; set; }
 
         [Required]
-        [Column("quoting_asset_id", TypeName = "varchar(36)")]
-        public string QuotingAssetId { get; set; }
+        [Column("quoting_asset_id")]
+        public long QuotingAssetId { get; set; }
 
         [Column("accuracy")]
         public int Accuracy { get; set; }

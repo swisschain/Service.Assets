@@ -2,11 +2,9 @@
 
 namespace Assets.WebApi.Models.Assets
 {
-    public class AssetRequestMany : PaginationRequest<string>
+    public class AssetRequestMany : PaginationRequest<long>
     {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
+        public string Symbol { get; set; }
 
         public bool? IsDisabled { get; set; }
     }

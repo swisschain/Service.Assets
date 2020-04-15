@@ -1,4 +1,4 @@
-using Assets.Client.Models.Assets;
+﻿using Assets.Client.Models.Assets;
 using FluentValidation;
 
 namespace Assets.WebApi.Validators
@@ -9,15 +9,13 @@ namespace Assets.WebApi.Validators
         {
             RuleFor(o => o.Id)
                 .NotEmpty()
-                .WithMessage("Identifier required.")
-                .MaximumLength(36)
-                .WithMessage("Identifier shouldn't be longer than 36 characters.");
+                .WithMessage("Identifier required.");
 
-            RuleFor(o => o.Name)
+            RuleFor(o => o.Symbol)
                 .NotEmpty()
-                .WithMessage("Name required.")
+                .WithMessage("Symbol required.")
                 .MaximumLength(100)
-                .WithMessage("Name shouldn't be longer than 100 characters.");
+                .WithMessage("Symbol shouldn't be longer than 100 characters.");
 
             RuleFor(o => o.Description)
                 .MaximumLength(500)

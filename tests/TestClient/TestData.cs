@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,7 +9,9 @@ namespace TestClient
     public class TestData
     {
         private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        
+
+        private const string BrokerId = "BrokerIdentifier";
+
         private static Random _random = new Random();
         
         public TestData()
@@ -18,15 +20,15 @@ namespace TestClient
             {
                 new Asset
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Name =  RandomString(3),
+                    BrokerId = BrokerId,
+                    Symbol =  RandomString(3),
                     Accuracy = 3,
                     Description = RandomString(100)
                 },
                 new Asset
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Name =  RandomString(3),
+                    BrokerId = BrokerId,
+                    Symbol = RandomString(3),
                     Accuracy = 3,
                     Description = RandomString(100)
                 }
@@ -36,8 +38,8 @@ namespace TestClient
             {
                 new AssetPair
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Name =  RandomString(6),
+                    BrokerId = BrokerId,
+                    Symbol =  RandomString(6),
                     Accuracy = 3,
                     BaseAssetId = Assets.First().Id,
                     QuotingAssetId = Assets.Last().Id,

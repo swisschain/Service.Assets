@@ -9,15 +9,15 @@ namespace Assets.Domain.Services
     {
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId);
 
-        Task<Asset> GetByIdAsync(string brokerId, string id);
+        Task<Asset> GetByIdAsync(long id, string brokerId);
 
-        Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string id, string name, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
+        Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string symbol, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50);
 
-        Task<Asset> AddAsync(string brokerId, string id, string name, string description, int accuracy, bool isDisabled);
+        Task<Asset> AddAsync(string brokerId, string symbol, string description, int accuracy, bool isDisabled);
 
-        Task<Asset> UpdateAsync(string brokerId, string id, string name, string description, int accuracy, bool isDisabled);
+        Task<Asset> UpdateAsync(long id, string brokerId, string symbol, string description, int accuracy, bool isDisabled);
 
-        Task DeleteAsync(string brokerId, string id);
+        Task DeleteAsync(long id, string brokerId);
     }
 }

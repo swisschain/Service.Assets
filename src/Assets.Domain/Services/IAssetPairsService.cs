@@ -11,20 +11,20 @@ namespace Assets.Domain.Services
 
         Task<IReadOnlyList<AssetPair>> GetAllAsync(string brokerId);
 
-        Task<AssetPair> GetByIdAsync(string assetPairId);
+        Task<AssetPair> GetByIdAsync(long id, string brokerId);
 
         Task<IReadOnlyList<AssetPair>> GetAllAsync(
-            string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
+            string brokerId, string symbol, long baseAssetId, long quoteAssetId, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50);
 
-        Task<AssetPair> AddAsync(string brokerId, string name, string baseAssetId, string quotingAssetId,
+        Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 
-        Task<AssetPair> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
+        Task<AssetPair> UpdateAsync(long id, string brokerId, string symbol, long baseAssetId, long quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 
-        Task<bool> DeleteAsync(string assetPairId);
+        Task<bool> DeleteAsync(long id, string brokerId);
     }
 }

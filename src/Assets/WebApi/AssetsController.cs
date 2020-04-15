@@ -29,7 +29,7 @@ namespace Assets.WebApi
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Paginated<Asset, string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Paginated<Asset, long>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetManyAsync([FromQuery] AssetRequestMany request)
         {
@@ -46,7 +46,7 @@ namespace Assets.WebApi
 
             var brokerId = User.GetTenantId();
 
-            var assets = await _assetsService.GetAllAsync(brokerId, request.Id, request.Name, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
+            var assets = await _assetsService.GetAllAsync(brokerId, request.Symbol, request.IsDisabled, sortOrder, request.Cursor, request.Limit);
 
             var result = _mapper.Map<List<Asset>>(assets);
 
@@ -56,11 +56,11 @@ namespace Assets.WebApi
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByIdAsync(string id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetsService.GetByIdAsync(brokerId, id);
+            var asset = await _assetsService.GetByIdAsync(id, brokerId);
 
             if (asset == null)
                 return NotFound();
@@ -80,7 +80,7 @@ namespace Assets.WebApi
 
             try
             {
-                asset = await _assetsService.AddAsync(model.Id, brokerId, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+                asset = await _assetsService.AddAsync(brokerId, model.Symbol, model.Description, model.Accuracy, model.IsDisabled);
             }
             catch (InvalidOperationException e)
             {
@@ -105,7 +105,7 @@ namespace Assets.WebApi
 
             try
             {
-                asset = await _assetsService.UpdateAsync(brokerId, model.Id, model.Name, model.Description, model.Accuracy, model.IsDisabled);
+                asset = await _assetsService.UpdateAsync(model.Id, brokerId, model.Symbol, model.Description, model.Accuracy, model.IsDisabled);
             }
             catch (InvalidOperationException e)
             {
@@ -117,7 +117,7 @@ namespace Assets.WebApi
             if (asset == null)
                 return NotFound();
 
-            var updatedModel = _assetsService.GetByIdAsync(brokerId, model.Id);
+            var updatedModel = _assetsService.GetByIdAsync(model.Id, brokerId);
 
             var newModel = _mapper.Map<Asset>(updatedModel);
 
@@ -127,13 +127,13 @@ namespace Assets.WebApi
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync(string id)
+        public async Task<IActionResult> DeleteAsync(long id)
         {
             var brokerId = User.GetTenantId();
 
             try
             {
-                await _assetsService.DeleteAsync(brokerId, id);
+                await _assetsService.DeleteAsync(id, brokerId);
             }
             catch (InvalidOperationException e)
             {

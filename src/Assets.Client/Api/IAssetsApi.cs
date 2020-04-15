@@ -11,7 +11,7 @@ namespace Assets.Client.Api
         /// <summary>
         /// Returns an asset by identifier.
         /// </summary>
-        Task<AssetModel> GetByIdAsync(string brokerId, string id);
+        Task<AssetModel> GetByIdAsync(long id, string brokerId);
 
         /// <summary>
         /// Creates asset.
@@ -26,6 +26,6 @@ namespace Assets.Client.Api
         /// <summary>
         /// Deletes asset by identifier.
         /// </summary>
-        Task DeleteAsync(string brokerId, string id);
+        Task DeleteAsync(long id, string brokerId);
     }
 }

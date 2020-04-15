@@ -31,30 +31,25 @@ namespace Assets.Services
         }
 
         public Task<IReadOnlyList<AssetPair>> GetAllAsync(
-            string brokerId, string assetPairId, string name, string baseAssetId, string quoteAssetId, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
+            string brokerId, string symbol, long baseAssetId, long quoteAssetId, bool? isDisabled,
+            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50)
         {
-            return _assetPairsRepository.GetAllAsync(brokerId, assetPairId, name, baseAssetId, quoteAssetId, isDisabled, sortOrder, cursor, limit);
+            return _assetPairsRepository.GetAllAsync(brokerId, symbol, baseAssetId, quoteAssetId, isDisabled, sortOrder, cursor, limit);
         }
 
-        public Task<AssetPair> GetByIdAsync(string assetPairId)
+        public Task<AssetPair> GetByIdAsync(long id, string brokerId)
         {
-            return _assetPairsRepository.GetByIdAsync(assetPairId);
+            return _assetPairsRepository.GetByIdAsync(id, brokerId);
         }
 
-        public async Task<AssetPair> AddAsync(string brokerId, string name, string baseAssetId,
-            string quotingAssetId, int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
+        public async Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId,
+            long quotingAssetId, int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
-            var assetPairId = Guid.NewGuid().ToString();
-
-            var date = DateTime.UtcNow;
-
             var assetPair = new AssetPair
             {
-                Id = assetPairId,
                 BrokerId = brokerId,
-                Name = name,
+                Symbol = symbol,
                 BaseAssetId = baseAssetId,
                 QuotingAssetId = quotingAssetId,
                 Accuracy = accuracy,
@@ -63,27 +58,27 @@ namespace Assets.Services
                 MaxOppositeVolume = maxOppositeVolume,
                 MarketOrderPriceThreshold = marketOrderPriceThreshold,
                 IsDisabled = isDisabled,
-                Created = date,
-                Modified = date
+                Created = DateTime.UtcNow
             };
 
             var result = await _assetPairsRepository.InsertAsync(assetPair);
 
-            _logger.LogInformation("Asset pair added. {$AssetPair}", assetPair);
+            _logger.LogInformation("Asset pair added. {$AssetPair}", result);
 
             return result;
         }
 
-        public async Task<AssetPair> UpdateAsync(string assetPairId, string name, string baseAssetId, string quotingAssetId,
+        public async Task<AssetPair> UpdateAsync(long id, string brokerId, string symbol, long baseAssetId, long quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
-            var assetPair = await _assetPairsRepository.GetByIdAsync(assetPairId);
+            var assetPair = await _assetPairsRepository.GetByIdAsync(id, brokerId);
 
             if (assetPair == null)
                 return null;
 
-            assetPair.Name = name;
+            assetPair.Id = id;
+            assetPair.Symbol = symbol;
             assetPair.BaseAssetId = baseAssetId;
             assetPair.QuotingAssetId = quotingAssetId;
             assetPair.Accuracy = accuracy;
@@ -101,14 +96,14 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task<bool> DeleteAsync(string assetPairId)
+        public async Task<bool> DeleteAsync(long id, string brokerId)
         {
-            var assetPair = await _assetPairsRepository.GetByIdAsync(assetPairId);
+            var assetPair = await _assetPairsRepository.GetByIdAsync(id, brokerId);
 
             if (assetPair == null)
                 return false;
 
-            await _assetPairsRepository.DeleteAsync(assetPairId);
+            await _assetPairsRepository.DeleteAsync(id, brokerId);
 
             _logger.LogInformation("Asset pair deleted. {$AssetPair}", assetPair);
 

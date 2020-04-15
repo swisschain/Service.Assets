@@ -16,9 +16,9 @@ namespace Assets.Client.Grpc
             _client = new Service.Assets.Contracts.Assets.AssetsClient(channel);
         }
 
-        public async Task<AssetModel> GetByIdAsync(string brokerId, string id)
+        public async Task<AssetModel> GetByIdAsync(long id, string brokerId)
         {
-            var response = await _client.GetByIdAsync(new GetAssetByIdRequest { BrokerId = brokerId, Id = id });
+            var response = await _client.GetByIdAsync(new GetAssetByIdRequest { Id = id, BrokerId = brokerId });
 
             return response.Asset != null
                 ? new AssetModel(response.Asset)
@@ -30,8 +30,7 @@ namespace Assets.Client.Grpc
             var response = await _client.AddAsync(new AddAssetRequest
             {
                 BrokerId = model.BrokerId,
-                Id = model.Id,
-                Name = model.Name,
+                Symbol = model.Symbol,
                 Description = model.Description,
                 Accuracy = model.Accuracy,
                 IsDisabled = model.IsDisabled
@@ -46,16 +45,16 @@ namespace Assets.Client.Grpc
             {
                 BrokerId = model.BrokerId,
                 Id = model.Id,
-                Name = model.Name,
+                Symbol = model.Symbol,
                 Description = model.Description,
                 Accuracy = model.Accuracy,
                 IsDisabled = model.IsDisabled
             });
         }
 
-        public async Task DeleteAsync(string brokerId, string id)
+        public async Task DeleteAsync(long id, string brokerId)
         {
-            await _client.DeleteAsync(new DeleteAssetRequest { BrokerId = brokerId, Id = id });
+            await _client.DeleteAsync(new DeleteAssetRequest { Id = id, BrokerId = brokerId });
         }
     }
 }

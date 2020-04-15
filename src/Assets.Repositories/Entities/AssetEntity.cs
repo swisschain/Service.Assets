@@ -7,17 +7,17 @@ namespace Assets.Repositories.Entities
     [Table("assets")]
     public class AssetEntity
     {
-        [Key]
-        [Column("id", TypeName = "varchar(36)")]
-        public string Id { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
+        public long Id { get; set; }
 
         [Required]
         [Column("broker_id", TypeName = "varchar(36)")]
         public string BrokerId { get; set; }
 
         [Required]
-        [Column("name", TypeName = "varchar(100)")]
-        public string Name { get; set; }
+        [Column("symbol", TypeName = "varchar(36)")]
+        public string Symbol { get; set; }
 
         [Column("description", TypeName = "varchar(500)")]
         public string Description { get; set; }

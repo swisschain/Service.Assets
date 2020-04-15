@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Assets.Repositories.Migrations
 {
@@ -15,9 +16,10 @@ namespace Assets.Repositories.Migrations
                 schema: "assets",
                 columns: table => new
                 {
+                    id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     broker_id = table.Column<string>(type: "varchar(36)", nullable: false),
-                    id = table.Column<string>(type: "varchar(36)", nullable: false),
-                    name = table.Column<string>(type: "varchar(100)", nullable: false),
+                    symbol = table.Column<string>(type: "varchar(36)", nullable: false),
                     description = table.Column<string>(type: "varchar(500)", nullable: true),
                     accuracy = table.Column<int>(nullable: false),
                     is_disabled = table.Column<bool>(nullable: false),
@@ -26,10 +28,7 @@ namespace Assets.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey(
-                        name: "PK_assets",
-                        columns: t => new { t.broker_id, t.id }
-                    );
+                    table.PrimaryKey("PK_assets", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -37,11 +36,12 @@ namespace Assets.Repositories.Migrations
                 schema: "assets",
                 columns: table => new
                 {
+                    id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     broker_id = table.Column<string>(type: "varchar(36)", nullable: false),
-                    id = table.Column<string>(type: "varchar(36)", nullable: false),
-                    name = table.Column<string>(type: "varchar(100)", nullable: false),
-                    base_asset_id = table.Column<string>(type: "varchar(36)", nullable: false),
-                    quoting_asset_id = table.Column<string>(type: "varchar(36)", nullable: false),
+                    symbol = table.Column<string>(type: "varchar(36)", nullable: false),
+                    base_asset_id = table.Column<long>(nullable: false),
+                    quoting_asset_id = table.Column<long>(nullable: false),
                     accuracy = table.Column<int>(nullable: false),
                     min_volume = table.Column<decimal>(nullable: false),
                     max_volume = table.Column<decimal>(nullable: false),
@@ -53,10 +53,7 @@ namespace Assets.Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey(
-                        name: "PK_asset_pairs",
-                        columns: t => new { t.broker_id, t.id }
-                    );
+                    table.PrimaryKey("PK_asset_pairs", x => x.id);
                     table.ForeignKey(
                         name: "FK_asset_pairs_assets_base_asset_id",
                         column: x => x.base_asset_id,
@@ -86,40 +83,18 @@ namespace Assets.Repositories.Migrations
                 column: "quoting_asset_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_asset_pairs_is_disabled",
+                name: "IX_asset_pairs_broker_id_symbol",
                 schema: "assets",
                 table: "asset_pairs",
-                column: "is_disabled");
+                columns: new[] { "broker_id", "symbol" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_assets_is_disabled",
+                name: "IX_assets_broker_id_symbol",
                 schema: "assets",
                 table: "assets",
-                column: "is_disabled");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_asset_pairs_name",
-                schema: "assets",
-                table: "asset_pairs",
-                column: "name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_assets_name",
-                schema: "assets",
-                table: "assets",
-                column: "name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_asset_pairs_broker_id",
-                schema: "assets",
-                table: "asset_pairs",
-                column: "broker_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_assets_broker_id",
-                schema: "assets",
-                table: "assets",
-                column: "broker_id");
+                columns: new[] { "broker_id", "symbol" },
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

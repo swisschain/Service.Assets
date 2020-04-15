@@ -8,14 +8,14 @@ namespace Assets.WebApi.Models.Assets
     public class Asset
     {
         /// <summary>
-        /// The unique identifier.
+        /// Identifier.
         /// </summary>
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// The human-readable name.
         /// </summary>
-        public string Name { get; set; }
+        public string Symbol { get; set; }
 
         /// <summary>
         /// The additional information.

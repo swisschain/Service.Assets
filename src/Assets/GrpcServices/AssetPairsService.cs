@@ -19,9 +19,9 @@ namespace Assets.GrpcServices
             _mapper = mapper;
         }
 
-        public override async Task<GetAllAssetPairsResponse> GetAll(Empty request, ServerCallContext context)
+        public override async Task<GetAllAssetPairsResponse> GetAll(GetAllAssetPairsRequest request, ServerCallContext context)
         {
-            var assetPairs = await _assetPairsService.GetAllAsync();
+            var assetPairs = await _assetPairsService.GetAllAsync(request.BrokerId);
 
             var response = new GetAllAssetPairsResponse();
 
@@ -33,14 +33,14 @@ namespace Assets.GrpcServices
         public override async Task<GetAssetPairByIdResponse> GetById(GetAssetPairByIdRequest request,
             ServerCallContext context)
         {
-            var assetPair = await _assetPairsService.GetByIdAsync(request.AssetPairId);
+            var assetPair = await _assetPairsService.GetByIdAsync(request.Id, request.BrokerId);
 
             return new GetAssetPairByIdResponse {AssetPair = _mapper.Map<AssetPair>(assetPair)};
         }
 
         public override async Task<AddAssetPairResponse> Add(AddAssetPairRequest request, ServerCallContext context)
         {
-            var assetPair = await _assetPairsService.AddAsync(request.BrokerId, request.Name, request.BaseAssetId,
+            var assetPair = await _assetPairsService.AddAsync(request.BrokerId, request.Symbol, request.BaseAssetId,
                 request.QuotingAssetId, request.Accuracy, decimal.Parse(request.MinVolume),
                 decimal.Parse(request.MaxVolume), decimal.Parse(request.MaxOppositeVolume),
                 decimal.Parse(request.MarketOrderPriceThreshold), request.IsDisabled);
@@ -50,7 +50,7 @@ namespace Assets.GrpcServices
 
         public override async Task<Empty> Update(UpdateAssetPairRequest request, ServerCallContext context)
         {
-            await _assetPairsService.UpdateAsync(request.Id, request.Name, request.BaseAssetId,
+            await _assetPairsService.UpdateAsync(request.Id, request.BrokerId, request.Symbol, request.BaseAssetId,
                 request.QuotingAssetId, request.Accuracy, decimal.Parse(request.MinVolume),
                 decimal.Parse(request.MaxVolume), decimal.Parse(request.MaxOppositeVolume),
                 decimal.Parse(request.MarketOrderPriceThreshold), request.IsDisabled);
@@ -60,7 +60,7 @@ namespace Assets.GrpcServices
 
         public override async Task<Empty> Delete(DeleteAssetPairRequest request, ServerCallContext context)
         {
-            await _assetPairsService.DeleteAsync(request.AssetPairId);
+            await _assetPairsService.DeleteAsync(request.Id, request.BrokerId);
 
             return new Empty();
         }
