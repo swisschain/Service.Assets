@@ -6,11 +6,6 @@
     public class AssetEditModel
     {
         /// <summary>
-        /// The unique identifier.
-        /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
         /// The broker identifier.
         /// </summary>
         public string BrokerId { get; set; }

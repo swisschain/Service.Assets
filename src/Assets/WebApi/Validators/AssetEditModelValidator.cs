@@ -7,10 +7,6 @@ namespace Assets.WebApi.Validators
     {
         public AssetEditModelValidator()
         {
-            RuleFor(o => o.Id)
-                .NotEmpty()
-                .WithMessage("Identifier required.");
-
             RuleFor(o => o.Symbol)
                 .NotEmpty()
                 .WithMessage("Symbol required.")

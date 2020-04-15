@@ -17,7 +17,6 @@ namespace Assets.Client.Models.Assets
 
         internal AssetModel(Asset asset)
         {
-            Id = asset.Id;
             BrokerId = BrokerId;
             Symbol = asset.Symbol;
             Description = asset.Description;
@@ -26,11 +25,6 @@ namespace Assets.Client.Models.Assets
             Created = asset.Created.ToDateTime();
             Modified = asset.Modified.ToDateTime();
         }
-        
-        /// <summary>
-        /// The unique identifier.
-        /// </summary>
-        public long Id { get; set; }
 
         /// <summary>
         /// Broker identifier.

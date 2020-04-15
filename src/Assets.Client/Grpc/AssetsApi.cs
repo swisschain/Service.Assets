@@ -46,9 +46,9 @@ namespace Assets.Client.Grpc
                 .ToList();
         }
 
-        public async Task<AssetModel> GetByIdAsync(long id, string brokerId)
+        public async Task<AssetModel> GetBySymbolAsync(string brokerId, string symbol)
         {
-            var response = await _client.GetByIdAsync(new GetAssetByIdRequest { Id = id, BrokerId = brokerId });
+            var response = await _client.GetBySymbolAsync(new GetAssetBySymbolRequest { BrokerId = brokerId, Symbol = symbol });
 
             return response.Asset != null
                 ? new AssetModel(response.Asset)
@@ -74,7 +74,6 @@ namespace Assets.Client.Grpc
             await _client.UpdateAsync(new UpdateAssetRequest
             {
                 BrokerId = model.BrokerId,
-                Id = model.Id,
                 Symbol = model.Symbol,
                 Description = model.Description,
                 Accuracy = model.Accuracy,
@@ -82,9 +81,9 @@ namespace Assets.Client.Grpc
             });
         }
 
-        public async Task DeleteAsync(long id, string brokerId)
+        public async Task DeleteAsync(string brokerId, string symbol)
         {
-            await _client.DeleteAsync(new DeleteAssetRequest { Id = id, BrokerId = brokerId });
+            await _client.DeleteAsync(new DeleteAssetRequest { BrokerId = brokerId, Symbol = symbol });
         }
     }
 }

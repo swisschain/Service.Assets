@@ -11,7 +11,7 @@ service AssetPairs {
     rpc GetAll (google.protobuf.Empty) returns (GetAllAssetPairsResponse);
     rpc GetAllByBrokerIds (GetAllAssetPairsByBrokerIdsRequest) returns (GetAllAssetPairsResponse);
     rpc GetAllByBrokerId (GetAllAssetPairsByBrokerIdRequest) returns (GetAllAssetPairsResponse);
-    rpc GetById (GetAssetPairByIdRequest) returns (GetAssetPairByIdResponse);
+    rpc GetBySymbol (GetAssetPairBySymbolRequest) returns (GetAssetPairBySymbolResponse);
     rpc Add (AddAssetPairRequest) returns (AddAssetPairResponse);
     rpc Update (UpdateAssetPairRequest) returns (google.protobuf.Empty);
     rpc Delete (DeleteAssetPairRequest) returns (google.protobuf.Empty);
@@ -29,20 +29,20 @@ message GetAllAssetPairsResponse {
     repeated AssetPair assetPairs = 1;
 }
 
-message GetAssetPairByIdRequest {
-    int64 id = 1;
-    string broker_id = 2;
+message GetAssetPairBySymbolRequest {
+    string broker_id = 1;
+    string symbol = 2;
 }
 
-message GetAssetPairByIdResponse {
+message GetAssetPairBySymbolResponse {
     AssetPair assetPair = 1;
 }
 
 message AddAssetPairRequest {
     string broker_id = 1;
     string symbol = 2;
-    int64 baseAssetId = 3;
-    int64 quotingAssetId = 4;
+    string baseAsset = 3;
+    string quotingAsset = 4;
     int32 accuracy = 5;
     string minVolume = 6;
     string maxVolume = 7;
@@ -56,11 +56,10 @@ message AddAssetPairResponse {
 }
 
 message UpdateAssetPairRequest {
-    int64 id = 1;
     string broker_id = 2;
     string symbol = 3;
-    int64 baseAssetId = 4;
-    int64 quotingAssetId = 5;
+    string baseAsset = 4;
+    string quotingAsset = 5;
     int32 accuracy = 6;
     string minVolume = 7;
     string maxVolume = 8;
@@ -70,16 +69,15 @@ message UpdateAssetPairRequest {
 }
 
 message DeleteAssetPairRequest {
-    int64 id = 1;
-    string broker_id = 2;
+    string broker_id = 1;
+    string symbol = 2;
 }
 
 message AssetPair {
-    int64 id = 1;
     string broker_id = 2;
     string symbol = 3;
-    int64 baseAssetId = 4;
-    int64 quotingAssetId = 5;
+    string baseAsset = 4;
+    string quotingAsset = 5;
     int32 accuracy = 6;
     string minVolume = 7;
     string maxVolume = 8;

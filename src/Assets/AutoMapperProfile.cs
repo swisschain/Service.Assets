@@ -21,9 +21,9 @@ namespace Assets
 
         private void Client()
         {
-            CreateMap<Asset, AssetModel>(MemberList.Source);
+            CreateMap<Asset, AssetModel>(MemberList.Destination);
 
-            CreateMap<AssetPair, AssetPairModel>(MemberList.Source);
+            CreateMap<AssetPair, AssetPairModel>(MemberList.Destination);
         }
 
         private void WebApi()

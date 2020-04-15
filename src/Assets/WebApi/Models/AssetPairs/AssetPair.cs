@@ -8,11 +8,6 @@ namespace Assets.WebApi.Models.AssetPairs
     public class AssetPair
     {
         /// <summary>
-        /// The unique identifier.
-        /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
         /// Symbol.
         /// </summary>
         public string Symbol { get; set; }
@@ -20,12 +15,12 @@ namespace Assets.WebApi.Models.AssetPairs
         /// <summary>
         /// The base asset identifier.
         /// </summary>
-        public long BaseAssetId { get; set; }
+        public string BaseAsset { get; set; }
 
         /// <summary>
         /// The quoting asset identifier.
         /// </summary>
-        public long QuotingAssetId { get; set; }
+        public string QuotingAsset { get; set; }
 
         /// <summary>
         /// The base asset accuracy.
@@ -38,12 +33,12 @@ namespace Assets.WebApi.Models.AssetPairs
         public decimal MinVolume { get; set; }
 
         /// <summary>
-        /// The maximum allowed volume of <see cref="BaseAssetId"/>.
+        /// The maximum allowed volume of <see cref="BaseAsset"/>.
         /// </summary>
         public decimal MaxVolume { get; set; }
 
         /// <summary>
-        /// The maximum allowed volume of <see cref="QuotingAssetId"/>.
+        /// The maximum allowed volume of <see cref="QuotingAsset"/>.
         /// </summary>
         public decimal MaxOppositeVolume { get; set; }
 

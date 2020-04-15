@@ -30,7 +30,13 @@ namespace Assets.Repositories
                 var entities = await context.AssetPairs
                     .ToListAsync();
 
-                return _mapper.Map<List<AssetPair>>(entities);
+                var result = _mapper.Map<List<AssetPair>>(entities);
+
+                var assets = await GetAllAssetsAsync(context);
+
+                MapAssetsSymbolsToAssetPair(result, assets);
+
+                return result;
             }
         }
 
@@ -44,7 +50,13 @@ namespace Assets.Repositories
 
                 var entities = await query.ToListAsync();
 
-                return _mapper.Map<List<AssetPair>>(entities);
+                var result = _mapper.Map<List<AssetPair>>(entities);
+
+                var assets = await GetAllAssetsAsync(brokerIds, context);
+
+                MapAssetsSymbolsToAssetPair(result, assets);
+
+                return result;
             }
         }
 
@@ -58,13 +70,19 @@ namespace Assets.Repositories
 
                 var entities = await query.ToListAsync();
 
-                return _mapper.Map<List<AssetPair>>(entities);
+                var result = _mapper.Map<AssetPair[]>(entities);
+
+                var assets = await GetAllAssetsAsync(brokerId, context);
+
+                MapAssetsSymbolsToAssetPair(result, assets);
+
+                return result;
             }
         }
 
         public async Task<IReadOnlyList<AssetPair>> GetAllAsync(
             string brokerId, string symbol, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50)
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
@@ -80,15 +98,15 @@ namespace Assets.Repositories
 
                 if (sortOrder == ListSortDirection.Ascending)
                 {
-                    if (cursor != default)
-                        query = query.Where(x => x.Id >= cursor);
+                    if (cursor != null)
+                        query = query.Where(x => x.Symbol.CompareTo(cursor) >= 0);
 
                     query = query.OrderBy(x => x.Id);
                 }
                 else
                 {
-                    if (cursor != default)
-                        query = query.Where(x => x.Id < cursor);
+                    if (cursor != null)
+                        query = query.Where(x => x.Symbol.CompareTo(cursor) < 0);
 
                     query = query.OrderByDescending(x => x.Id);
                 }
@@ -97,7 +115,13 @@ namespace Assets.Repositories
 
                 var entities = await query.ToListAsync();
 
-                return _mapper.Map<List<AssetPair>>(entities);
+                var result = _mapper.Map<List<AssetPair>>(entities);
+
+                var assets = await GetAllAssetsAsync(brokerId, context);
+
+                MapAssetsSymbolsToAssetPair(result, assets);
+
+                return result;
             }
         }
 
@@ -108,7 +132,25 @@ namespace Assets.Repositories
                 var entity = await context.AssetPairs
                     .FindAsync(id);
 
-                return _mapper.Map<AssetPair>(entity);
+                var result = _mapper.Map<AssetPair>(entity);
+
+                await MapAssetsSymbolsToAssetPair(result, context);
+
+                return result;
+            }
+        }
+
+        public async Task<AssetPair> GetBySymbolAsync(string brokerId, string symbol)
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                var entity = await GetAsync(brokerId, symbol, context);
+
+                var result = _mapper.Map<AssetPair>(entity);
+
+                await MapAssetsSymbolsToAssetPair(result, context);
+
+                return result;
             }
         }
 
@@ -143,7 +185,11 @@ namespace Assets.Repositories
 
                 await context.SaveChangesAsync();
 
-                return _mapper.Map<AssetPair>(entity);
+                var result = _mapper.Map<AssetPair>(entity);
+
+                await MapAssetsSymbolsToAssetPair(result, context);
+
+                return result;
             }
         }
 
@@ -153,13 +199,10 @@ namespace Assets.Repositories
 
             using (var context = _connectionFactory.CreateDataContext())
             {
-                var existed = await GetAsync(assetPair.Id, assetPair.BrokerId, context);
+                var existed = await GetAsync(assetPair.BrokerId, assetPair.Symbol, context);
 
                 if (existed == null)
                     throw new InvalidOperationException($"An asset pair with the identifier '{assetPair.Id}' not exists.");
-
-                if (existed.Symbol != assetPair.Symbol)
-                    throw new InvalidOperationException($"Symbol can't be changed from '{existed.Symbol}' to '{assetPair.Symbol}' after creation.");
 
                 if (existed.BaseAssetId != assetPair.BaseAssetId)
                     throw new InvalidOperationException($"Base asset can't be changed from '{existed.BaseAssetId}' to '{assetPair.BaseAssetId}' after creation.");
@@ -173,7 +216,11 @@ namespace Assets.Repositories
 
                 await context.SaveChangesAsync();
 
-                return _mapper.Map<AssetPair>(existed);
+                var result = _mapper.Map<AssetPair>(existed);
+
+                await MapAssetsSymbolsToAssetPair(result, context);
+
+                return result;
             }
         }
 
@@ -185,6 +232,21 @@ namespace Assets.Repositories
 
                 if (existed == null)
                     throw new InvalidOperationException($"An asset pair with the identifier '{id}' not exists.");
+
+                context.Entry(existed).State = EntityState.Deleted;
+
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteAsync(string brokerId, string symbol)
+        {
+            using (var context = _connectionFactory.CreateDataContext())
+            {
+                var existed = await GetAsync(brokerId, symbol, context);
+
+                if (existed == null)
+                    throw new InvalidOperationException($"An asset pair with symbol '{symbol}' not exists.");
 
                 context.Entry(existed).State = EntityState.Deleted;
 
@@ -226,6 +288,55 @@ namespace Assets.Repositories
                 .SingleOrDefaultAsync();
 
             return existed;
+        }
+
+        private async Task<IReadOnlyList<AssetEntity>> GetAllAssetsAsync(string brokerId, DataContext context)
+        {
+            IQueryable<AssetEntity> query = context.Assets;
+
+            var existed = await query
+                .Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper())
+                .ToListAsync();
+
+            return existed;
+        }
+
+        private async Task<IReadOnlyList<AssetEntity>> GetAllAssetsAsync(IEnumerable<string> brokerIds, DataContext context)
+        {
+            IQueryable<AssetEntity> query = context.Assets;
+
+            var existed = await query
+                .Where(x => brokerIds.Contains(x.BrokerId))
+                .ToListAsync();
+
+            return existed;
+        }
+
+        private async Task<IReadOnlyList<AssetEntity>> GetAllAssetsAsync(DataContext context)
+        {
+            IQueryable<AssetEntity> query = context.Assets;
+
+            var existed = await query.ToListAsync();
+
+            return existed;
+        }
+
+        private void MapAssetsSymbolsToAssetPair(IReadOnlyList<AssetPair> assetPairs, IReadOnlyList<AssetEntity> assets)
+        {
+            foreach (var assetPair in assetPairs)
+            {
+                assetPair.BaseAsset = assets.Single(x => x.Id == assetPair.BaseAssetId).Symbol;
+                assetPair.QuotingAsset = assets.Single(x => x.Id == assetPair.QuotingAssetId).Symbol;
+            }
+        }
+
+        private async Task MapAssetsSymbolsToAssetPair(AssetPair assetPair, DataContext context)
+        {
+            var baseAsset = await GetAssetAsync(assetPair.BaseAssetId, assetPair.BrokerId, context);
+            var quotingAsset = await GetAssetAsync(assetPair.QuotingAssetId, assetPair.BrokerId, context);
+
+            assetPair.BaseAsset = baseAsset.Symbol;
+            assetPair.QuotingAsset = quotingAsset.Symbol;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Assets.WebApi.Models.AssetPairs
 {
-    public class AssetPairRequestMany : PaginationRequest<long>
+    public class AssetPairRequestMany : PaginationRequest<string>
     {
         public string Symbol { get; set; }
 

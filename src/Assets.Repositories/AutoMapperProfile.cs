@@ -8,15 +8,17 @@ namespace Assets.Repositories
     {
         public AutoMapperProfile()
         {
-            CreateMap<Asset, AssetEntity>(MemberList.Source)
+            CreateMap<Asset, AssetEntity>(MemberList.Destination)
                 .ForMember(x => x.Created, opt => opt.Ignore())
                 .ForMember(x => x.Modified, opt => opt.Ignore());
             CreateMap<AssetEntity, Asset>(MemberList.Destination);
 
-            CreateMap<AssetPair, AssetPairEntity>(MemberList.Source)
+            CreateMap<AssetPair, AssetPairEntity>(MemberList.Destination)
                 .ForMember(x => x.Created, opt => opt.Ignore())
                 .ForMember(x => x.Modified, opt => opt.Ignore());
-            CreateMap<AssetPairEntity, AssetPair>(MemberList.Destination);
+            CreateMap<AssetPairEntity, AssetPair>(MemberList.Destination)
+                .ForMember(x => x.BaseAsset, opt => opt.Ignore())
+                .ForMember(x => x.QuotingAsset, opt => opt.Ignore());
         }
     }
 }

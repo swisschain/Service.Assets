@@ -51,7 +51,7 @@ namespace Assets.WebApi
 
             var result = _mapper.Map<List<AssetPair>>(assetPairs);
 
-            return Ok(result.Paginate(request, Url, x => x.Id));
+            return Ok(result.Paginate(request, Url, x => x.Symbol));
         }
 
         [HttpGet("{id}")]
@@ -81,8 +81,8 @@ namespace Assets.WebApi
 
             try
             {
-                assetPair = await _assetPairsService.AddAsync(brokerId, model.Symbol, model.BaseAssetId,
-                    model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+                assetPair = await _assetPairsService.AddAsync(brokerId, model.Symbol, model.BaseAsset,
+                    model.QuotingAsset, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                     model.MarketOrderPriceThreshold, model.IsDisabled);
             }
             catch (InvalidOperationException e)
@@ -108,8 +108,8 @@ namespace Assets.WebApi
 
             try
             {
-                assetPair = await _assetPairsService.UpdateAsync(model.Id, brokerId, model.Symbol, model.BaseAssetId,
-                    model.QuotingAssetId, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+                assetPair = await _assetPairsService.UpdateAsync(brokerId, model.Symbol, model.BaseAsset,
+                    model.QuotingAsset, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                     model.MarketOrderPriceThreshold, model.IsDisabled);
             }
             catch (InvalidOperationException e)

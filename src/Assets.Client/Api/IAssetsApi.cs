@@ -25,9 +25,9 @@ namespace Assets.Client.Api
         Task<IReadOnlyList<AssetModel>> GetAllByBrokerId(string brokerId);
 
         /// <summary>
-        /// Returns an asset by identifier.
+        /// Returns an asset by symbol.
         /// </summary>
-        Task<AssetModel> GetByIdAsync(long id, string brokerId);
+        Task<AssetModel> GetBySymbolAsync(string brokerId, string symbol);
 
         /// <summary>
         /// Creates asset.
@@ -40,8 +40,8 @@ namespace Assets.Client.Api
         Task UpdateAsync(AssetEditModel model);
 
         /// <summary>
-        /// Deletes asset by identifier.
+        /// Deletes asset by symbol.
         /// </summary>
-        Task DeleteAsync(long id, string brokerId);
+        Task DeleteAsync(string brokerId, string symbol);
     }
 }

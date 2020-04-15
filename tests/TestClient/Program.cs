@@ -47,7 +47,7 @@ namespace TestClient
             {
                 await client.Assets.UpdateAsync(new AssetEditModel
                 {
-                    Id = asset.Id, BrokerId = asset.BrokerId, Symbol = asset.Symbol, Accuracy = asset.Accuracy, Description = asset.Description
+                    BrokerId = asset.BrokerId, Symbol = asset.Symbol, Accuracy = asset.Accuracy, Description = asset.Description
                 });
             }
         }
@@ -56,7 +56,7 @@ namespace TestClient
         {
             foreach (var asset in testData.Assets)
             {
-                await client.Assets.DeleteAsync(asset.Id, asset.BrokerId);
+                await client.Assets.DeleteAsync(asset.BrokerId, asset.Symbol);
             }
         }
 
@@ -69,8 +69,8 @@ namespace TestClient
                     BrokerId = assetPair.BrokerId,
                     Symbol = assetPair.Symbol,
                     Accuracy = assetPair.Accuracy,
-                    BaseAssetId = assetPair.BaseAssetId,
-                    QuotingAssetId = assetPair.QuotingAssetId,
+                    BaseAsset = assetPair.BaseAsset,
+                    QuotingAsset = assetPair.QuotingAsset,
                     MinVolume = decimal.Parse(assetPair.MinVolume),
                     MaxVolume = decimal.Parse(assetPair.MaxVolume),
                     MaxOppositeVolume = decimal.Parse(assetPair.MaxOppositeVolume),
@@ -85,7 +85,7 @@ namespace TestClient
 
             foreach (var assetPair in testData.AssetPairs)
             {
-                var getByIdResponse = await client.AssetPairs.GetByIdAsync(assetPair.Id, assetPair.BrokerId);
+                var getByIdResponse = await client.AssetPairs.GetBySymbolAsync(assetPair.BrokerId, assetPair.Symbol);
             }
         }
 
@@ -95,11 +95,10 @@ namespace TestClient
             {
                 await client.AssetPairs.UpdateAsync(new AssetPairEditModel
                 {
-                    Id = assetPair.Id,
                     Symbol = assetPair.Symbol,
                     Accuracy = assetPair.Accuracy,
-                    BaseAssetId = assetPair.BaseAssetId,
-                    QuotingAssetId = assetPair.QuotingAssetId,
+                    BaseAsset = assetPair.BaseAsset,
+                    QuotingAsset = assetPair.QuotingAsset,
                     MinVolume = decimal.Parse(assetPair.MinVolume),
                     MaxVolume = decimal.Parse(assetPair.MaxVolume),
                     MaxOppositeVolume = decimal.Parse(assetPair.MaxOppositeVolume),
@@ -112,7 +111,7 @@ namespace TestClient
         {
             foreach (var assetPair in testData.AssetPairs)
             {
-                await client.AssetPairs.DeleteAsync(assetPair.Id, assetPair.BrokerId);
+                await client.AssetPairs.DeleteAsync(assetPair.BrokerId, assetPair.Symbol);
             }
         }
     }

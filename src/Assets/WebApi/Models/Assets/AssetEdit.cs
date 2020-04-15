@@ -6,11 +6,6 @@
     public class AssetEdit
     {
         /// <summary>
-        /// Identifier.
-        /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
         /// The human-readable name.
         /// </summary>
         public string Symbol { get; set; }

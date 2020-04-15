@@ -17,11 +17,10 @@ namespace Assets.Client.Models.AssetPairs
 
         internal AssetPairModel(AssetPair assetPair)
         {
-            Id = assetPair.Id;
             BrokerId = assetPair.BrokerId;
             Symbol = assetPair.Symbol;
-            BaseAssetId = assetPair.BaseAssetId;
-            QuotingAssetId = assetPair.QuotingAssetId;
+            BaseAsset = assetPair.BaseAsset;
+            QuotingAsset = assetPair.QuotingAsset;
             Accuracy = assetPair.Accuracy;
             MinVolume = decimal.Parse(assetPair.MinVolume);
             MaxVolume = decimal.Parse(assetPair.MaxVolume);
@@ -31,11 +30,6 @@ namespace Assets.Client.Models.AssetPairs
             Created = assetPair.Created.ToDateTime();
             Modified = assetPair.Modified.ToDateTime();
         }
-
-        /// <summary>
-        /// The unique identifier.
-        /// </summary>
-        public long Id { get; set; }
 
         /// <summary>
         /// Broker identifier.
@@ -48,14 +42,14 @@ namespace Assets.Client.Models.AssetPairs
         public string Symbol { get; set; }
 
         /// <summary>
-        /// The base asset identifier.
+        /// The base asset symbol.
         /// </summary>
-        public long BaseAssetId { get; set; }
+        public string BaseAsset { get; set; }
 
         /// <summary>
-        /// The quoting asset identifier.
+        /// The quoting asset symbol.
         /// </summary>
-        public long QuotingAssetId { get; set; }
+        public string QuotingAsset { get; set; }
 
         /// <summary>
         /// The base asset accuracy.
@@ -68,12 +62,12 @@ namespace Assets.Client.Models.AssetPairs
         public decimal MinVolume { get; set; }
 
         /// <summary>
-        /// The maximum allowed volume of <see cref="BaseAssetId"/>.
+        /// The maximum allowed volume of <see cref="BaseAsset"/>.
         /// </summary>
         public decimal MaxVolume { get; set; }
 
         /// <summary>
-        /// The maximum allowed volume of <see cref="QuotingAssetId"/>.
+        /// The maximum allowed volume of <see cref="QuotingAsset"/>.
         /// </summary>
         public decimal MaxOppositeVolume { get; set; }
 

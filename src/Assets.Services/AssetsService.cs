@@ -37,14 +37,14 @@ namespace Assets.Services
         }
 
         public Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string symbol, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50)
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             return _assetsRepository.GetAllAsync(brokerId, symbol, isDisabled, sortOrder, cursor, limit);
         }
 
-        public Task<Asset> GetByIdAsync(long id, string brokerId)
+        public Task<Asset> GetBySymbolAsync(string brokerId, string symbol)
         {
-            return _assetsRepository.GetByIdAsync(id, brokerId);
+            return _assetsRepository.GetBySymbolAsync(brokerId, symbol);
         }
 
         public async Task<Asset> AddAsync(
@@ -70,12 +70,11 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task<Asset> UpdateAsync(long id, string brokerId, string symbol, string description, int accuracy, bool isDisabled)
+        public async Task<Asset> UpdateAsync(string brokerId, string symbol, string description, int accuracy, bool isDisabled)
         {
             var asset = new Asset
             {
                 BrokerId = brokerId,
-                Id = id,
                 Symbol = symbol,
                 Description = description,
                 Accuracy = accuracy,
@@ -89,11 +88,11 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task DeleteAsync(long id, string brokerId)
+        public async Task DeleteAsync(string brokerId, string symbol)
         {
-            await _assetsRepository.DeleteAsync(id, brokerId);
+            await _assetsRepository.DeleteAsync(brokerId, symbol);
 
-            _logger.LogInformation("Asset deleted. Id='{$id}', BrokerId='{$BrokerId}'", id, brokerId);
+            _logger.LogInformation("Asset deleted. Symbol='{$id}', BrokerId='{$BrokerId}'", symbol, brokerId);
         }
     }
 }

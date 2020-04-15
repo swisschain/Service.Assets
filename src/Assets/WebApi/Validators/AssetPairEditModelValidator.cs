@@ -7,23 +7,23 @@ namespace Assets.WebApi.Validators
     {
         public AssetPairEditModelValidator()
         {
-            RuleFor(o => o.Id)
-                .NotEmpty()
-                .WithMessage("Identifier required.");
-
             RuleFor(o => o.Symbol)
                 .NotEmpty()
                 .WithMessage("Symbol required.")
-                .MaximumLength(100)
-                .WithMessage("Symbol shouldn't be longer than 100 characters.");
+                .MaximumLength(36)
+                .WithMessage("Symbol shouldn't be longer than 36 characters.");
 
-            RuleFor(o => o.BaseAssetId)
+            RuleFor(o => o.BaseAsset)
                 .NotEmpty()
-                .WithMessage("Base asset identifier required.");
+                .WithMessage("Base asset identifier required.")
+                .MaximumLength(36)
+                .WithMessage("Base asset shouldn't be longer than 36 characters.");
 
-            RuleFor(o => o.QuotingAssetId)
+            RuleFor(o => o.QuotingAsset)
                 .NotEmpty()
-                .WithMessage("Quoting asset identifier required.");
+                .WithMessage("Quoting asset identifier required.")
+                .MaximumLength(36)
+                .WithMessage("Quoting asset shouldn't be longer than 36 characters.");
 
             RuleFor(o => o.Accuracy)
                 .GreaterThanOrEqualTo(0)

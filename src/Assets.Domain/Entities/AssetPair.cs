@@ -28,9 +28,19 @@ namespace Assets.Domain.Entities
         public long BaseAssetId { get; set; }
 
         /// <summary>
+        /// The base asset symbol.
+        /// </summary>
+        public string BaseAsset { get; set; }
+
+        /// <summary>
         /// The quoting asset identifier.
         /// </summary>
         public long QuotingAssetId { get; set; }
+
+        /// <summary>
+        /// The base asset symbol.
+        /// </summary>
+        public string QuotingAsset { get; set; }
 
         /// <summary>
         /// The base asset accuracy.

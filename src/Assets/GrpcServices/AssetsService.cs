@@ -51,11 +51,11 @@ namespace Assets.GrpcServices
             return response;
         }
 
-        public override async Task<GetAssetByIdResponse> GetById(GetAssetByIdRequest request, ServerCallContext context)
+        public override async Task<GetAssetBySymbolResponse> GetBySymbol(GetAssetBySymbolRequest request, ServerCallContext context)
         {
-            var asset = await _assetsService.GetByIdAsync(request.Id, request.BrokerId);
+            var asset = await _assetsService.GetBySymbolAsync(request.BrokerId, request.Symbol);
 
-            return new GetAssetByIdResponse {Asset = _mapper.Map<Asset>(asset)};
+            return new GetAssetBySymbolResponse { Asset = _mapper.Map<Asset>(asset)};
         }
 
         public override async Task<AddAssetResponse> Add(AddAssetRequest request, ServerCallContext context)
@@ -68,7 +68,7 @@ namespace Assets.GrpcServices
 
         public override async Task<Empty> Update(UpdateAssetRequest request, ServerCallContext context)
         {
-            await _assetsService.UpdateAsync(request.Id, request.BrokerId, request.Symbol, request.Description, request.Accuracy,
+            await _assetsService.UpdateAsync(request.BrokerId, request.Symbol, request.Description, request.Accuracy,
                 request.IsDisabled);
 
             return new Empty();
@@ -76,7 +76,7 @@ namespace Assets.GrpcServices
 
         public override async Task<Empty> Delete(DeleteAssetRequest request, ServerCallContext context)
         {
-            await _assetsService.DeleteAsync(request.Id, request.BrokerId);
+            await _assetsService.DeleteAsync(request.BrokerId, request.Symbol);
 
             return new Empty();
         }

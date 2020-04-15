@@ -14,14 +14,16 @@ namespace Assets.Domain.Repositories
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId);
 
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string symbol, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50);
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
         Task<Asset> GetByIdAsync(long id, string brokerId);
+
+        Task<Asset> GetBySymbolAsync(string brokerId, string symbol);
 
         Task<Asset> InsertAsync(Asset asset);
 
         Task<Asset> UpdateAsync(Asset asset);
 
-        Task DeleteAsync(long id, string brokerId);
+        Task DeleteAsync(string brokerId, string symbol);
     }
 }

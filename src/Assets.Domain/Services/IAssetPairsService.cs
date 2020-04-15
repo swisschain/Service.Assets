@@ -15,18 +15,30 @@ namespace Assets.Domain.Services
 
         Task<AssetPair> GetByIdAsync(long id, string brokerId);
 
+        Task<AssetPair> GetBySymbolAsync(string brokerId, string symbol);
+
         Task<IReadOnlyList<AssetPair>> GetAllAsync(
             string brokerId, string symbol, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50);
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
+
+        Task<AssetPair> AddAsync(string brokerId, string symbol, string baseAsset, string quotingAsset,
+            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
+            decimal marketOrderPriceThreshold, bool isDisabled);
 
         Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 
-        Task<AssetPair> UpdateAsync(long id, string brokerId, string symbol, long baseAssetId, long quotingAssetId,
+        Task<AssetPair> UpdateAsync(string brokerId, string symbol, string baseAsset, string quotingAsset,
+            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
+            decimal marketOrderPriceThreshold, bool isDisabled);
+
+        Task<AssetPair> UpdateAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled);
 
         Task<bool> DeleteAsync(long id, string brokerId);
+
+        Task<bool> DeleteAsync(string brokerId, string symbol);
     }
 }

@@ -13,15 +13,15 @@ namespace Assets.Domain.Services
 
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId);
 
-        Task<Asset> GetByIdAsync(long id, string brokerId);
+        Task<Asset> GetBySymbolAsync(string brokerId, string symbol);
 
         Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId, string symbol, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50);
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50);
 
         Task<Asset> AddAsync(string brokerId, string symbol, string description, int accuracy, bool isDisabled);
 
-        Task<Asset> UpdateAsync(long id, string brokerId, string symbol, string description, int accuracy, bool isDisabled);
+        Task<Asset> UpdateAsync(string brokerId, string symbol, string description, int accuracy, bool isDisabled);
 
-        Task DeleteAsync(long id, string brokerId);
+        Task DeleteAsync(string brokerId, string symbol);
     }
 }

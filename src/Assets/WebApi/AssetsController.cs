@@ -50,17 +50,17 @@ namespace Assets.WebApi
 
             var result = _mapper.Map<List<Asset>>(assets);
 
-            return Ok(result.Paginate(request, Url, x => x.Id));
+            return Ok(result.Paginate(request, Url, x => x.Symbol));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{symbol}")]
         [ProducesResponseType(typeof(Asset), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByIdAsync(long id)
+        public async Task<IActionResult> GetByIdAsync(string symbol)
         {
             var brokerId = User.GetTenantId();
 
-            var asset = await _assetsService.GetByIdAsync(id, brokerId);
+            var asset = await _assetsService.GetBySymbolAsync(brokerId, symbol);
 
             if (asset == null)
                 return NotFound();
@@ -84,7 +84,7 @@ namespace Assets.WebApi
             }
             catch (InvalidOperationException e)
             {
-                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+                ModelState.AddModelError($"{nameof(model.Symbol)}", e.Message);
 
                 return BadRequest(ModelState);
             }
@@ -105,11 +105,11 @@ namespace Assets.WebApi
 
             try
             {
-                asset = await _assetsService.UpdateAsync(model.Id, brokerId, model.Symbol, model.Description, model.Accuracy, model.IsDisabled);
+                asset = await _assetsService.UpdateAsync(brokerId, model.Symbol, model.Description, model.Accuracy, model.IsDisabled);
             }
             catch (InvalidOperationException e)
             {
-                ModelState.AddModelError($"{nameof(model.Id)}", e.Message);
+                ModelState.AddModelError($"{nameof(model.Symbol)}", e.Message);
 
                 return BadRequest(ModelState);
             }
@@ -117,27 +117,27 @@ namespace Assets.WebApi
             if (asset == null)
                 return NotFound();
 
-            var updatedModel = await _assetsService.GetByIdAsync(model.Id, brokerId);
+            var updatedModel = await _assetsService.GetBySymbolAsync(brokerId, model.Symbol);
 
             var newModel = _mapper.Map<Asset>(updatedModel);
 
             return Ok(newModel);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{symbol}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteAsync(long id)
+        public async Task<IActionResult> DeleteAsync(string symbol)
         {
             var brokerId = User.GetTenantId();
 
             try
             {
-                await _assetsService.DeleteAsync(id, brokerId);
+                await _assetsService.DeleteAsync(brokerId, symbol);
             }
             catch (InvalidOperationException e)
             {
-                ModelState.AddModelError($"{nameof(id)}", e.Message);
+                ModelState.AddModelError($"{nameof(symbol)}", e.Message);
 
                 return BadRequest(ModelState);
             }

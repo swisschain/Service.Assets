@@ -47,18 +47,9 @@ namespace Assets.Client.Grpc
                 .ToList();
         }
 
-        public async Task<IReadOnlyList<AssetPairModel>> GetAllAsync(string brokerId)
+        public async Task<AssetPairModel> GetBySymbolAsync(string brokerId, string symbol)
         {
-            var response = await _client.GetAllByBrokerIdAsync(new GetAllAssetPairsByBrokerIdRequest { BrokerId = brokerId });
-
-            return response.AssetPairs
-                .Select(asset => new AssetPairModel(asset))
-                .ToList();
-        }
-
-        public async Task<AssetPairModel> GetByIdAsync(long id, string brokerId)
-        {
-            var response = await _client.GetByIdAsync(new GetAssetPairByIdRequest { Id = id, BrokerId = brokerId });
+            var response = await _client.GetBySymbolAsync(new GetAssetPairBySymbolRequest { BrokerId = brokerId, Symbol = symbol });
 
             return response.AssetPair != null
                 ? new AssetPairModel(response.AssetPair)
@@ -72,8 +63,8 @@ namespace Assets.Client.Grpc
                 BrokerId = model.BrokerId,
                 Symbol = model.Symbol,
                 Accuracy = model.Accuracy,
-                BaseAssetId = model.BaseAssetId,
-                QuotingAssetId = model.QuotingAssetId,
+                BaseAsset = model.BaseAsset,
+                QuotingAsset = model.QuotingAsset,
                 MinVolume = model.MinVolume.ToString(CultureInfo.InvariantCulture),
                 MaxVolume = model.MaxVolume.ToString(CultureInfo.InvariantCulture),
                 MaxOppositeVolume = model.MaxOppositeVolume.ToString(CultureInfo.InvariantCulture),
@@ -88,12 +79,11 @@ namespace Assets.Client.Grpc
         {
             await _client.UpdateAsync(new UpdateAssetPairRequest
             {
-                Id = model.Id,
                 BrokerId = model.BrokerId,
                 Symbol = model.Symbol,
                 Accuracy = model.Accuracy,
-                BaseAssetId = model.BaseAssetId,
-                QuotingAssetId = model.QuotingAssetId,
+                BaseAsset = model.BaseAsset,
+                QuotingAsset = model.QuotingAsset,
                 MinVolume = model.MinVolume.ToString(CultureInfo.InvariantCulture),
                 MaxVolume = model.MaxVolume.ToString(CultureInfo.InvariantCulture),
                 MaxOppositeVolume = model.MaxOppositeVolume.ToString(CultureInfo.InvariantCulture),
@@ -102,9 +92,9 @@ namespace Assets.Client.Grpc
             });
         }
 
-        public async Task DeleteAsync(long id, string brokerId)
+        public async Task DeleteAsync(string brokerId, string symbol)
         {
-            await _client.DeleteAsync(new DeleteAssetPairRequest { Id =  id, BrokerId = brokerId });
+            await _client.DeleteAsync(new DeleteAssetPairRequest { BrokerId = brokerId, Symbol = symbol });
         }
     }
 }

@@ -12,11 +12,15 @@ namespace Assets.Services
     public class AssetPairsService : IAssetPairsService
     {
         private readonly IAssetPairsRepository _assetPairsRepository;
+        private readonly IAssetsRepository _assetsRepository;
         private readonly ILogger<AssetPairsService> _logger;
 
-        public AssetPairsService(IAssetPairsRepository assetPairsRepository, ILogger<AssetPairsService> logger)
+        public AssetPairsService(IAssetPairsRepository assetPairsRepository,
+            IAssetsRepository assetsRepository,
+            ILogger<AssetPairsService> logger)
         {
             _assetPairsRepository = assetPairsRepository;
+            _assetsRepository = assetsRepository;
             _logger = logger;
         }
 
@@ -37,7 +41,7 @@ namespace Assets.Services
 
         public Task<IReadOnlyList<AssetPair>> GetAllAsync(
             string brokerId, string symbol, bool? isDisabled,
-            ListSortDirection sortOrder = ListSortDirection.Ascending, long cursor = default, int limit = 50)
+            ListSortDirection sortOrder = ListSortDirection.Ascending, string cursor = null, int limit = 50)
         {
             return _assetPairsRepository.GetAllAsync(brokerId, symbol, isDisabled, sortOrder, cursor, limit);
         }
@@ -47,8 +51,25 @@ namespace Assets.Services
             return _assetPairsRepository.GetByIdAsync(id, brokerId);
         }
 
-        public async Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId,
-            long quotingAssetId, int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
+        public Task<AssetPair> GetBySymbolAsync(string brokerId, string symbol)
+        {
+            return _assetPairsRepository.GetBySymbolAsync(brokerId, symbol);
+        }
+
+        public async Task<AssetPair> AddAsync(string brokerId, string symbol, string baseAsset, string quotingAsset,
+            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
+            decimal marketOrderPriceThreshold, bool isDisabled)
+        {
+            var baseAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, baseAsset);
+
+            var quotingAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, quotingAsset);
+
+            return await AddAsync(brokerId, symbol, baseAssetEntity.Id, quotingAssetEntity.Id,
+                accuracy, minVolume, maxVolume, maxOppositeVolume, marketOrderPriceThreshold, isDisabled);
+        }
+
+        public async Task<AssetPair> AddAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
+            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
             var assetPair = new AssetPair
@@ -73,16 +94,27 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task<AssetPair> UpdateAsync(long id, string brokerId, string symbol, long baseAssetId, long quotingAssetId,
+        public async Task<AssetPair> UpdateAsync(string brokerId, string symbol, string baseAsset, string quotingAsset,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
-            var assetPair = await _assetPairsRepository.GetByIdAsync(id, brokerId);
+            var baseAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, baseAsset);
+
+            var quotingAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, quotingAsset);
+
+            return await UpdateAsync(brokerId, symbol, baseAssetEntity.Id, quotingAssetEntity.Id,
+                accuracy, minVolume, maxVolume, maxOppositeVolume, marketOrderPriceThreshold, isDisabled);
+        }
+
+        public async Task<AssetPair> UpdateAsync(string brokerId, string symbol, long baseAssetId, long quotingAssetId,
+            int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
+            decimal marketOrderPriceThreshold, bool isDisabled)
+        {
+            var assetPair = await _assetPairsRepository.GetBySymbolAsync(brokerId, symbol);
 
             if (assetPair == null)
                 return null;
 
-            assetPair.Id = id;
             assetPair.Symbol = symbol;
             assetPair.BaseAssetId = baseAssetId;
             assetPair.QuotingAssetId = quotingAssetId;
@@ -109,6 +141,20 @@ namespace Assets.Services
                 return false;
 
             await _assetPairsRepository.DeleteAsync(id, brokerId);
+
+            _logger.LogInformation("Asset pair deleted. {$AssetPair}", assetPair);
+
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(string brokerId, string symbol)
+        {
+            var assetPair = await _assetPairsRepository.GetBySymbolAsync(brokerId, symbol);
+
+            if (assetPair == null)
+                return false;
+
+            await _assetPairsRepository.DeleteAsync(brokerId, symbol);
 
             _logger.LogInformation("Asset pair deleted. {$AssetPair}", assetPair);
 

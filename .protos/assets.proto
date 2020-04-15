@@ -11,7 +11,7 @@ service Assets {
     rpc GetAll (google.protobuf.Empty) returns (GetAllAssetsResponse);
     rpc GetAllByBrokerIds (GetAllAssetsByBrokerIdsRequest) returns (GetAllAssetsResponse);
     rpc GetAllByBrokerId (GetAllAssetsByBrokerIdRequest) returns (GetAllAssetsResponse);
-    rpc GetById (GetAssetByIdRequest) returns (GetAssetByIdResponse);
+    rpc GetBySymbol (GetAssetBySymbolRequest) returns (GetAssetBySymbolResponse);
     rpc Add (AddAssetRequest) returns (AddAssetResponse);
     rpc Update (UpdateAssetRequest) returns (google.protobuf.Empty);
     rpc Delete (DeleteAssetRequest) returns (google.protobuf.Empty);
@@ -29,12 +29,12 @@ message GetAllAssetsResponse {
     repeated Asset assets = 1;
 }
 
-message GetAssetByIdRequest {
-    int64 id = 1;
-    string broker_id = 2;
+message GetAssetBySymbolRequest {
+    string broker_id = 1;
+    string symbol = 2;
 }
 
-message GetAssetByIdResponse {
+message GetAssetBySymbolResponse {
     Asset asset = 1;
 }
 
@@ -51,26 +51,24 @@ message AddAssetResponse {
 }
 
 message UpdateAssetRequest {
-    int64 id = 1;
-    string broker_id = 2;
-    string symbol = 3;
-    string description = 4;
-    int32 accuracy = 5;
-    bool is_disabled = 6;
+    string broker_id = 1;
+    string symbol = 2;
+    string description = 3;
+    int32 accuracy = 4;
+    bool is_disabled = 5;
 }
 
 message DeleteAssetRequest {
-    int64 id = 1;
-    string broker_id = 2;
+    string broker_id = 1;
+    string symbol = 2;
 }
 
 message Asset {
-    int64 id = 1;
-    string broker_id = 2;
-    string symbol = 3;
-    string description = 4;
-    int32 accuracy = 5;
-    bool is_disabled = 6;
-    google.protobuf.Timestamp created = 7;
-    google.protobuf.Timestamp modified = 8;
+    string broker_id = 1;
+    string symbol = 2;
+    string description = 3;
+    int32 accuracy = 4;
+    bool is_disabled = 5;
+    google.protobuf.Timestamp created = 6;
+    google.protobuf.Timestamp modified = 7;
 }

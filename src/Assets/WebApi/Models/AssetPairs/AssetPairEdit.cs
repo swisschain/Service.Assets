@@ -16,14 +16,14 @@
         public string Symbol { get; set; }
 
         /// <summary>
-        /// The base asset identifier.
+        /// The base asset symbol.
         /// </summary>
-        public long BaseAssetId { get; set; }
+        public string BaseAsset { get; set; }
 
         /// <summary>
-        /// The quoting asset identifier.
+        /// The quoting asset symbol.
         /// </summary>
-        public long QuotingAssetId { get; set; }
+        public string QuotingAsset { get; set; }
 
         /// <summary>
         /// The base asset accuracy.
@@ -36,12 +36,12 @@
         public decimal MinVolume { get; set; }
 
         /// <summary>
-        /// The maximum allowed volume of <see cref="BaseAssetId"/>.
+        /// The maximum allowed volume of <see cref="BaseAsset"/>.
         /// </summary>
         public decimal MaxVolume { get; set; }
 
         /// <summary>
-        /// The maximum allowed volume of <see cref="QuotingAssetId"/>.
+        /// The maximum allowed volume of <see cref="QuotingAsset"/>.
         /// </summary>
         public decimal MaxOppositeVolume { get; set; }
 
