@@ -147,13 +147,5 @@ namespace Assets.WebApi
 
             return Ok();
         }
-
-        [HttpGet("Test")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult TestAsync()
-        {
-            return Content("It's the really last version!");
-        }
     }
 }
