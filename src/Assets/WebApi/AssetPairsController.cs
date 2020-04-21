@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Assets.Domain.Services;
 using Assets.WebApi.Models.AssetPairs;
-using Assets.WebApi.Models.Common;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swisschain.Sdk.Server.Authorization;
+using Swisschain.Sdk.Server.WebApi.Common;
 using Swisschain.Sdk.Server.WebApi.Pagination;
 
 namespace Assets.WebApi
@@ -33,13 +33,6 @@ namespace Assets.WebApi
         [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetManyAsync([FromQuery] AssetPairRequestMany request)
         {
-            if (request.Limit > 1000)
-            {
-                ModelState.AddModelError($"{nameof(request.Limit)}", "Should not be more than 1000");
-
-                return BadRequest(ModelState);
-            }
-
             var sortOrder = request.Order == PaginationOrder.Asc
                 ? ListSortDirection.Ascending
                 : ListSortDirection.Descending;
@@ -57,8 +50,11 @@ namespace Assets.WebApi
         [HttpGet("{symbol}")]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetBySymbolAsync(string symbol)
+        public async Task<IActionResult> GetAsync(string symbol)
         {
+            if (string.IsNullOrWhiteSpace(symbol))
+                return NotFound();
+
             var brokerId = User.GetTenantId();
 
             var assetPair = await _assetPairsService.GetBySymbolAsync(brokerId, symbol);
@@ -73,6 +69,7 @@ namespace Assets.WebApi
 
         [HttpPost]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddAsync([FromBody] AssetPairAdd model)
         {
             var brokerId = User.GetTenantId();
@@ -100,7 +97,8 @@ namespace Assets.WebApi
         [HttpPut]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairUpdate model)
+        [ProducesResponseType(typeof(ModelStateDictionaryErrorResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
         {
             var brokerId = User.GetTenantId();
 
@@ -134,6 +132,9 @@ namespace Assets.WebApi
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync(string symbol)
         {
+            if (string.IsNullOrWhiteSpace(symbol))
+                return NotFound();
+
             var brokerId = User.GetTenantId();
 
             try

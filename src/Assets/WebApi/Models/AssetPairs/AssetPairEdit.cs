@@ -1,9 +1,9 @@
 ﻿namespace Assets.WebApi.Models.AssetPairs
 {
     /// <summary>
-    /// Represents an asset pair create/update information.
+    /// Represents an asset pair update information.
     /// </summary>
-    public class AssetPairUpdate
+    public class AssetPairEdit
     {
         /// <summary>
         /// Symbol.

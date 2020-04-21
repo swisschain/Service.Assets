@@ -1,17 +1,19 @@
-﻿using Assets.Client.Models.Assets;
+﻿using Assets.WebApi.Models.Assets;
 using FluentValidation;
+using JetBrains.Annotations;
 
 namespace Assets.WebApi.Validators
 {
-    public class AssetEditModelValidator : AbstractValidator<AssetEditModel>
+    [UsedImplicitly]
+    public class AssetValidator : AbstractValidator<Asset>
     {
-        public AssetEditModelValidator()
+        public AssetValidator()
         {
             RuleFor(o => o.Symbol)
                 .NotEmpty()
                 .WithMessage("Symbol required.")
-                .MaximumLength(100)
-                .WithMessage("Symbol shouldn't be longer than 100 characters.");
+                .MaximumLength(16)
+                .WithMessage("Symbol shouldn't be longer than 16 characters.");
 
             RuleFor(o => o.Description)
                 .MaximumLength(500)
