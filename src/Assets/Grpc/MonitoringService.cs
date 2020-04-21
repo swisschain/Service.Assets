@@ -3,7 +3,7 @@ using Grpc.Core;
 using Service.Assets.Contracts;
 using Swisschain.Sdk.Server.Common;
 
-namespace Assets.GrpcServices
+namespace Assets.Grpc
 {
     public class MonitoringService : Monitoring.MonitoringBase
     {

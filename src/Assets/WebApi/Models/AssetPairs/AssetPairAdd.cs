@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an asset pair create/update information.
     /// </summary>
-    public class AssetPairEdit
+    public class AssetPairAdd
     {
         /// <summary>
         /// Symbol.

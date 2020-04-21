@@ -33,9 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\..\.protos\assets.proto" Link="Protos\assets.proto" />
-    <Protobuf Include="..\..\.protos\asset-pairs.proto" Link="Protos\asset-pairs.proto" />
-    <Protobuf Include="..\..\.protos\isalive.proto" Link="Protos\isalive.proto" />
+    <Protobuf Include="..\..\.protos\assets.proto" Link="Grpc\Protos\assets.proto" />
+    <Protobuf Include="..\..\.protos\asset-pairs.proto" Link="Grpc\Protos\asset-pairs.proto" />
+    <Protobuf Include="..\..\.protos\isalive.proto" Link="Grpc\Protos\isalive.proto" />
   </ItemGroup>
 
 </Project>

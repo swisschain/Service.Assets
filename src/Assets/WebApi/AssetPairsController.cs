@@ -73,7 +73,7 @@ namespace Assets.WebApi
 
         [HttpPost]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddAsync([FromBody] AssetPairEdit model)
+        public async Task<IActionResult> AddAsync([FromBody] AssetPairAdd model)
         {
             var brokerId = User.GetTenantId();
 
@@ -100,7 +100,7 @@ namespace Assets.WebApi
         [HttpPut]
         [ProducesResponseType(typeof(AssetPair), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairEdit model)
+        public async Task<IActionResult> UpdateAsync([FromBody] AssetPairUpdate model)
         {
             var brokerId = User.GetTenantId();
 
@@ -108,8 +108,8 @@ namespace Assets.WebApi
 
             try
             {
-                assetPair = await _assetPairsService.UpdateAsync(brokerId, model.Symbol, model.BaseAsset,
-                    model.QuotingAsset, model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
+                assetPair = await _assetPairsService.UpdateAsync(brokerId, model.Symbol,
+                    model.Accuracy, model.MinVolume, model.MaxVolume, model.MaxOppositeVolume,
                     model.MarketOrderPriceThreshold, model.IsDisabled);
             }
             catch (InvalidOperationException e)

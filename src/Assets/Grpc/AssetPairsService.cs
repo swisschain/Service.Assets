@@ -5,7 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Service.Assets.Contracts;
 
-namespace Assets.GrpcServices
+namespace Assets.Grpc
 {
     public class AssetPairsService : AssetPairs.AssetPairsBase
     {
@@ -71,8 +71,8 @@ namespace Assets.GrpcServices
 
         public override async Task<Empty> Update(UpdateAssetPairRequest request, ServerCallContext context)
         {
-            await _assetPairsService.UpdateAsync(request.BrokerId, request.Symbol, request.BaseAsset,
-                request.QuotingAsset, request.Accuracy, decimal.Parse(request.MinVolume),
+            await _assetPairsService.UpdateAsync(request.BrokerId, request.Symbol,
+                request.Accuracy, decimal.Parse(request.MinVolume),
                 decimal.Parse(request.MaxVolume), decimal.Parse(request.MaxOppositeVolume),
                 decimal.Parse(request.MarketOrderPriceThreshold), request.IsDisabled);
 

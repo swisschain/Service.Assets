@@ -5,7 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Service.Assets.Contracts;
 
-namespace Assets.GrpcServices
+namespace Assets.Grpc
 {
     public class AssetsService : Service.Assets.Contracts.Assets.AssetsBase
     {

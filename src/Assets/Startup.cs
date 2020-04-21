@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Text;
 using Assets.Configuration;
-using Assets.GrpcServices;
+using Assets.Grpc;
 using Assets.Repositories.Context;
 using Assets.Swagger;
 using Autofac;

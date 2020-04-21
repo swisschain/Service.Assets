@@ -83,22 +83,16 @@ namespace Assets.Services
             return result;
         }
 
-        public async Task<AssetPair> UpdateAsync(string brokerId, string symbol, string baseAsset, string quotingAsset,
+        public async Task<AssetPair> UpdateAsync(string brokerId, string symbol,
             int accuracy, decimal minVolume, decimal maxVolume, decimal maxOppositeVolume,
             decimal marketOrderPriceThreshold, bool isDisabled)
         {
-            var baseAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, baseAsset);
-
-            var quotingAssetEntity = await _assetsRepository.GetBySymbolAsync(brokerId, quotingAsset);
-
             var assetPair = await _assetPairsRepository.GetBySymbolAsync(brokerId, symbol);
 
             if (assetPair == null)
                 return null;
 
             assetPair.Symbol = symbol;
-            assetPair.BaseAsset = baseAssetEntity.Symbol;
-            assetPair.QuotingAsset = quotingAssetEntity.Symbol;
             assetPair.Accuracy = accuracy;
             assetPair.MinVolume = minVolume;
             assetPair.MaxVolume = maxVolume;
