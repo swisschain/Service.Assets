@@ -64,7 +64,7 @@ namespace Assets.Repositories
         {
             using (var context = _connectionFactory.CreateDataContext())
             {
-                IQueryable<AssetEntity> query = context.Assets;
+                IQueryable<AssetPairEntity> query = context.AssetPairs;
 
                 query = query.Where(x => x.BrokerId.ToUpper() == brokerId.ToUpper());
 
