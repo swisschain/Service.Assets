@@ -43,7 +43,7 @@ namespace Assets.Client.Grpc
             var response = await _client.GetAllByBrokerIdAsync(new GetAllAssetPairsByBrokerIdRequest { BrokerId = brokerId });
 
             return response.AssetPairs
-                .Select(asset => new AssetPairModel(asset))
+                .Select(assetPair => new AssetPairModel(assetPair))
                 .ToList();
         }
 

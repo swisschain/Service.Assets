@@ -10,12 +10,13 @@ namespace TestClient
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Press enter to start");
-            Console.ReadLine();
+            Console.WriteLine("Assets tests started.");
             var client = new AssetsClient(new AssetsClientSettings {ServiceAddress = "http://localhost:5001"});
+            //var client = new AssetsClient(new AssetsClientSettings { ServiceAddress = "http://service-assets.exchange.svc.cluster.local:5001" });
 
             var testData = new TestData();
 
+            await GetAssetsAsync(client);
             await CreateAssetsAsync(client, testData);
             await UpdateAssetsAsync(client, testData);
 
@@ -28,6 +29,11 @@ namespace TestClient
             
             Console.WriteLine("Done");
             Console.ReadLine();
+        }
+
+        private static async Task GetAssetsAsync(AssetsClient client)
+        {
+            var getAllByBrokerIdResponse = await client.Assets.GetAllByBrokerId("06979753-1d02-4c40-ac5f-42f5aa7fe861");
         }
 
         private static async Task CreateAssetsAsync(AssetsClient client, TestData testData)
@@ -82,6 +88,8 @@ namespace TestClient
         private static async Task GetAssetPairsAsync(AssetsClient client, TestData testData)
         {
             var getAllResponse = await client.AssetPairs.GetAllAsync();
+
+            var getAllByBrokerIdResponse = await client.AssetPairs.GetAllByBrokerId("06979753-1d02-4c40-ac5f-42f5aa7fe861");
 
             foreach (var assetPair in testData.AssetPairs)
             {
