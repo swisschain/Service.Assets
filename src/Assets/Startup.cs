@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text;
 using Assets.Configuration;
+using Assets.Exceptions;
 using Assets.Grpc;
 using Assets.Repositories.Context;
 using Assets.Swagger;
@@ -116,6 +117,8 @@ namespace Assets
             services.AddGrpc();
 
             services.AddSingleton(Config);
+
+            services.AddGrpcReflection();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -147,10 +150,14 @@ namespace Assets
 
             app.ApplicationServices.GetRequiredService<ConnectionFactory>()
                 .EnsureMigration();
+
+            app.UseMiddleware<UnhandledExceptionsMiddleware>();
         }
 
         private void RegisterEndpoints(IEndpointRouteBuilder endpoints)
         {
+            endpoints.MapGrpcReflectionService();
+
             endpoints.MapGrpcService<AssetsService>();
             endpoints.MapGrpcService<AssetPairsService>();
             endpoints.MapGrpcService<MonitoringService>();
