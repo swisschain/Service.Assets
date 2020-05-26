@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Assets.Domain.Services;
 using AutoMapper;
 using Google.Protobuf.WellKnownTypes;

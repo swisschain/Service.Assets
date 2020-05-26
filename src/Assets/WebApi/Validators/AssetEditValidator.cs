@@ -15,11 +15,11 @@ namespace Assets.WebApi.Validators
 
             RuleFor(o => o.Description)
                 .MaximumLength(500)
-                .WithMessage("Description shouldn't be longer than 500 characters.");
+                .WithMessage("Description must be less than 500 characters.");
 
             RuleFor(o => o.Accuracy)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Accuracy should be greater than or equal to 0.");
+                .WithMessage("Accuracy must be greater than or equal to 0.");
         }
     }
 }

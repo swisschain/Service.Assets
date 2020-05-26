@@ -11,21 +11,21 @@ namespace TestClient
         static async Task Main(string[] args)
         {
             Console.WriteLine("Assets tests started.");
-            var client = new AssetsClient(new AssetsClientSettings {ServiceAddress = "http://localhost:5001"});
-            //var client = new AssetsClient(new AssetsClientSettings { ServiceAddress = "http://service-assets.exchange.svc.cluster.local:5001" });
+            //var client = new AssetsClient(new AssetsClientSettings {ServiceAddress = "http://localhost:5001"});
+            var client = new AssetsClient(new AssetsClientSettings { ServiceAddress = "http://service-assets.exchange.svc.cluster.local:5001" });
 
             var testData = new TestData();
 
             await GetAssetsAsync(client);
-            await CreateAssetsAsync(client, testData);
-            await UpdateAssetsAsync(client, testData);
+            //await CreateAssetsAsync(client, testData);
+            //await UpdateAssetsAsync(client, testData);
 
-            await CreateAssetPairsAsync(client, testData);
-            await GetAssetPairsAsync(client, testData);
-            await UpdateAssetPairsAsync(client, testData);
+            //await CreateAssetPairsAsync(client, testData);
+            //await GetAssetPairsAsync(client, testData);
+            //await UpdateAssetPairsAsync(client, testData);
 
-            await DeleteAssetPairsAsync(client, testData);
-            await DeleteAssetsAsync(client, testData);
+            //await DeleteAssetPairsAsync(client, testData);
+            //await DeleteAssetsAsync(client, testData);
             
             Console.WriteLine("Done");
             Console.ReadLine();
