@@ -63,7 +63,7 @@ namespace Assets.Domain.Entities
         public decimal MaxOppositeVolume { get; set; }
 
         /// <summary>
-        /// Maximum alowed slippage for market order, percents from middle price.
+        /// Maximum allowed slippage for market order, percents from middle price.
         /// </summary>
         public decimal MarketOrderPriceThreshold { get; set; }
 

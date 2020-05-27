@@ -30,7 +30,6 @@ namespace Assets.Services
             return _assetsRepository.GetAllAsync(brokerIds);
         }
 
-
         public Task<IReadOnlyList<Asset>> GetAllAsync(string brokerId)
         {
             return _assetsRepository.GetAllAsync(brokerId);
