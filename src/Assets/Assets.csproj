@@ -5,6 +5,7 @@
     <AssemblyName>Assets</AssemblyName>
     <RootNamespace>Assets</RootNamespace>
     <UserSecretsId>dabdde60-c34a-4207-946f-aba2473c65aa</UserSecretsId>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
