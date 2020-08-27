@@ -1,4 +1,4 @@
-name: Continuous integration for Assets
+name: Release Service
 
 on:
   push:
