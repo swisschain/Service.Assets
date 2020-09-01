@@ -28,7 +28,7 @@ namespace Assets.Services
             builder.Register(ctx =>
                 {
                     return new MyNoSqlServer.DataWriter.MyNoSqlServerDataWriter<AssetsEntity>(() => _myNoSqlWriterServiceUrl,
-                        SetupMyNoSqlAssetService.AssetServiceTableName);
+                        SetupMyNoSqlAssetService.AssetsTableName);
                 })
                 .As<IMyNoSqlServerDataWriter<AssetsEntity>>()
                 .SingleInstance();
@@ -36,7 +36,7 @@ namespace Assets.Services
             builder.Register(ctx =>
                 {
                     return new MyNoSqlServer.DataWriter.MyNoSqlServerDataWriter<AssetPairsEntity>(() => _myNoSqlWriterServiceUrl,
-                        SetupMyNoSqlAssetService.AssetServiceTableName);
+                        SetupMyNoSqlAssetService.AssetPairsTableName);
                 })
                 .As<IMyNoSqlServerDataWriter<AssetPairsEntity>>()
                 .SingleInstance();
