@@ -32,8 +32,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>  
   <ItemGroup>
-    <ProjectReference Include="..\Assets.Domain.MyNoSql\Assets.Domain.MyNoSql.csproj" />
-    <ProjectReference Include="..\Assets.Domain\Assets.Domain.csproj" />
+    <ProjectReference Include="..\Assets.Domain.MyNoSql\Assets.Domain.MyNoSql.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Assets.Domain\Assets.Domain.csproj" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="..\..\.protos\assets.proto" Link="Protos\assets.proto" />
