@@ -11,5 +11,10 @@
     "LogLevel": {
       "Default": "Trace"
     }
+  },
+
+  "MyNoSqlServer": {
+    "ReaderServiceUrl": "${MyNoSqlServer-ReaderServiceUrl}",
+    "WriterServiceUrl": "${MyNoSqlServer-WriterServiceUrl}"
   }
 }

@@ -21,3 +21,7 @@ jobs:
       run: dotnet pack --configuration Release src/Assets.Client /p:Version=${GITHUB_REF#refs/tags/client-}
     - name: Publish
       run: dotnet nuget push src/Assets.Client/bin/Release/*.nupkg -s "https://api.nuget.org/v3/index.json" -k ${{ secrets.NUGET_TOCKEN }}
+    - name: Package MyNoSql
+      run: dotnet pack --configuration Release src/Assets.Domain.MyNoSql /p:Version=${GITHUB_REF#refs/tags/client-}
+    - name: Publish MyNoSql
+      run: dotnet nuget push src/Assets.Domain.MyNoSql/bin/Release/*.nupkg -s "https://api.nuget.org/v3/index.json" -k ${{ secrets.NUGET_TOCKEN }}

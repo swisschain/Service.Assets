@@ -55,6 +55,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".protos", ".protos", "{A08D
 		.protos\isalive.proto = .protos\isalive.proto
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Domain.MyNoSql", "src\Assets.Domain.MyNoSql\Assets.Domain.MyNoSql.csproj", "{065A87BC-5B42-44DB-9A6D-9663B49908D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{1C6BCAA0-FE14-498B-9EF5-523F29531BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C6BCAA0-FE14-498B-9EF5-523F29531BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C6BCAA0-FE14-498B-9EF5-523F29531BEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{065A87BC-5B42-44DB-9A6D-9663B49908D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{065A87BC-5B42-44DB-9A6D-9663B49908D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{065A87BC-5B42-44DB-9A6D-9663B49908D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{065A87BC-5B42-44DB-9A6D-9663B49908D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,6 +117,7 @@ Global
 		{2A0A751D-BA9E-4F9D-9F95-745892A45EA5} = {7F3DBAA2-139B-401D-A33F-1409A9BB4DE8}
 		{2621FA16-4E25-4226-9760-6C877B86D192} = {7F3DBAA2-139B-401D-A33F-1409A9BB4DE8}
 		{1C6BCAA0-FE14-498B-9EF5-523F29531BEA} = {7F3DBAA2-139B-401D-A33F-1409A9BB4DE8}
+		{065A87BC-5B42-44DB-9A6D-9663B49908D7} = {D21E4C59-6AC1-4DAD-93F7-B1B17DC1EC45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {196C39E2-2F2E-46AB-BA2A-0D2E7E171B5A}

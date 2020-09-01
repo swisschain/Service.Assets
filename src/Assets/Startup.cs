@@ -165,7 +165,7 @@ namespace Assets
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new Services.AutofacModule());
+            builder.RegisterModule(new Services.AutofacModule(Config.MyNoSqlServer.WriterServiceUrl));
             builder.RegisterModule(new Repositories.AutofacModule(Config.AssetsService.Db.DataConnectionString));
         }
     }

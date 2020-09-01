@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Assets.Domain.Entities;
+using Assets.Domain.MyNoSql;
 using Assets.Domain.Repositories;
 using Assets.Domain.Services;
 using Microsoft.Extensions.Logging;
+using MyNoSqlServer.Abstractions;
 
 namespace Assets.Services
 {
@@ -13,11 +16,13 @@ namespace Assets.Services
     {
         private readonly IAssetsRepository _assetsRepository;
         private readonly ILogger<AssetsService> _logger;
+        private readonly IMyNoSqlServerDataWriter<AssetsEntity> _assetDataWriter;
 
-        public AssetsService(IAssetsRepository assetsRepository, ILogger<AssetsService> logger)
+        public AssetsService(IAssetsRepository assetsRepository, ILogger<AssetsService> logger, IMyNoSqlServerDataWriter<AssetsEntity> assetDataWriter)
         {
             _assetsRepository = assetsRepository;
             _logger = logger;
+            _assetDataWriter = assetDataWriter;
         }
 
         public Task<IReadOnlyList<Asset>> GetAllAsync()
@@ -64,6 +69,8 @@ namespace Assets.Services
 
             var result = await _assetsRepository.InsertAsync(asset);
 
+            await TryUpdateMyNoSql();
+
             _logger.LogInformation("Asset added. {$Asset}", result);
 
             return result;
@@ -82,6 +89,8 @@ namespace Assets.Services
 
             var result = await _assetsRepository.UpdateAsync(asset);
 
+            await TryUpdateMyNoSql();
+
             _logger.LogInformation("Asset updated. {$Asset}", asset);
 
             return result;
@@ -96,9 +105,50 @@ namespace Assets.Services
 
             await _assetsRepository.DeleteAsync(brokerId, symbol);
 
+            await TryUpdateMyNoSql(brokerId);
+
             _logger.LogInformation("Asset deleted. Symbol='{$symbol}'", symbol);
 
             return true;
+        }
+
+        private async Task TryUpdateMyNoSql(string brokerId)
+        {
+            try
+            {
+                var assets = await _assetsRepository.GetAllAsync(brokerId);
+
+                var entity = AssetsEntity.Generate(brokerId);
+                entity.Assets.AddRange(assets);
+
+                await _assetDataWriter.InsertOrReplaceAsync(entity);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Cannot update assets in MyNoSQL cache for broker: {brokerId}");
+            }
+        }
+
+        private async Task TryUpdateMyNoSql()
+        {
+            var assets = await _assetsRepository.GetAllAsync();
+
+            foreach (var data in assets.GroupBy(a => a.BrokerId))
+            {
+                try
+                {
+                    var entity = AssetsEntity.Generate(data.Key);
+                    entity.Assets.AddRange(data);
+
+                    await _assetDataWriter.InsertOrReplaceAsync(entity);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Cannot update assets in MyNoSQL cache for broker: {data.Key}");
+                }
+            }
+
+            _logger.LogInformation("Finish update assets in MyNoSQL cache for ALL brokers");
         }
     }
 }
