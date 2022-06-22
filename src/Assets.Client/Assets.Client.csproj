@@ -29,7 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MyNoSqlServer.DataReader" Version="1.2.16" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>  
   <ItemGroup>
     <ProjectReference Include="..\Assets.Domain.MyNoSql\Assets.Domain.MyNoSql.csproj" PrivateAssets="All" />
